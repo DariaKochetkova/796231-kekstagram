@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дарья Кочеткова](https://up.htmlacademy.ru/javascript/16/user/796231).
-* Наставник: `Неизвестно`.
+* Наставник: Алексей Балесный https://htmlacademy.ru/profile/id221665.
 
 ---
 
