@@ -11,15 +11,15 @@ var getRandomComment = function () {
     currentComments[i] = randomComment;
   }
   return currentComments;
-}
+};
 
 for (var i = 0; i < 25; i++) {
   pictures[i] = {
-  url: 'photos/' + (i + 1) + '.jpg',
-  likes: Math.floor(Math.random() * 186) + 15,
-  comments: getRandomComment(),
-  description: description[Math.floor(Math.random() * 6)]
-  }
+    url: 'photos/' + (i + 1) + '.jpg',
+    likes: Math.floor(Math.random() * 186) + 15,
+    comments: getRandomComment(),
+    description: description[Math.floor(Math.random() * 6)]
+  };
 }
 
 var picturesContainer = document.querySelector('.pictures');
@@ -27,20 +27,20 @@ var similarPictureTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
 
-var renderPictures = function (pictures) {
+var renderPictures = function () {
   var pictureElement = similarPictureTemplate.cloneNode(true);
   pictureElement.querySelector('.picture__img').src = pictures[i].url;
   pictureElement.querySelector('.picture__likes').textContent = pictures[i].likes;
   pictureElement.querySelector('.picture__comments').textContent = pictures[i].comments.length;
 
   return pictureElement;
-}
+};
 
 var fragment = document.createDocumentFragment();
 for (var i = 0; i < 25; i++) {
   fragment.appendChild(renderPictures(pictures[i]));
 }
-pictureContainer.appendChild(fragment);
+picturesContainer.appendChild(fragment);
 
 var bigPicture = document.querySelector('.big-picture');
 bigPicture.classList.remove('hidden');
@@ -55,8 +55,8 @@ comments.textContent = pictures[1].comments.length;
 var avatars = [];
 for (var i = 0; i < 6; i++) {
   avatars[i] = {
-  url: 'img/avatar-' + Math.floor(Math.random() * 6) + '.svg'
-  }
+    url: 'img/avatar-' + Math.floor(Math.random() * 6) + '.svg'
+  };
 }
 
 var socialPicture = document.querySelector('.social__picture');
@@ -64,8 +64,8 @@ socialPicture.src = avatars[i].url;
 var socialText = document.querySelector('.social__text');
 socialText.textContent = pictures[i].comments;
 
-var description = document.querySelector('.social__caption');
-description.textContent = pictures[i].description;
+var caption = document.querySelector('.social__caption');
+caption.textContent = pictures[i].description;
 
 var commentCount = document.querySelector('.social__comment-count');
 commentCount.classList.add('.visually-hidden');
