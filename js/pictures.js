@@ -29,9 +29,9 @@ var similarPictureTemplate = document.querySelector('#picture')
 
 var renderPictures = function (picture) {
   var pictureElement = similarPictureTemplate.cloneNode(true);
-  pictureElement.querySelector('.picture__img').src = pictures[i].url;
-  pictureElement.querySelector('.picture__likes').textContent = pictures[i].likes;
-  pictureElement.querySelector('.picture__comments').textContent = pictures[i].comments.length;
+  pictureElement.querySelector('.picture__img').src = picture.url;
+  pictureElement.querySelector('.picture__likes').textContent = picture.likes;
+  pictureElement.querySelector('.picture__comments').textContent = picture.comments.length;
 
   return pictureElement;
 };
@@ -59,7 +59,7 @@ for (var i = 0; i < pictures[1].comments; i++) {
   var commentElement = document.createElement('li');
   commentElement.className = 'social__comment';
   commentElement.innerHTML = '<img class="social__picture" src="img/avatar-' + (Math.floor(Math.random() * 6) + 1) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"></img>';
-  commentElement.innerHTML += '<p class="social__text">' + pictures[1].comments + '</p>';
+  commentElement.innerHTML += '<p class="social__text">' + pictures[1].comments[i] + '</p>';
   commentsFragment.appendChild(commentElement);
 }
 
