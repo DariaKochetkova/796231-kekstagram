@@ -52,20 +52,21 @@ likes.textContent = pictures[1].likes;
 var comments = document.querySelector('.comments-count');
 comments.textContent = pictures[1].comments.length;
 
-var avatars = [];
-for (var i = 0; i < 6; i++) {
-  avatars[i] = {
-    url: 'img/avatar-' + Math.floor(Math.random() * 6) + '.svg'
-  };
+var commentsFragment = document.createDocumentFragment();
+var commentsList = document.querySelector('.social__comments');
 
-  var socialPicture = document.querySelector('.social__picture');
-  socialPicture.src = avatars[i].url;
-  var socialText = document.querySelector('.social__text');
-  socialText.innerHTML = pictures[i].comments;
-
-  var caption = document.querySelector('.social__caption');
-  caption.innerHTML = pictures[i].description;
+for (var i = 0; i < comments.length; i++) {
+  var commentElement = document.createElement('li');
+  commentElement.className = 'social__comment';
+  commentElement.innerHTML = '<img class="social__picture" src="img/avatar-' + (Math.floor(Math.random() * 6) + 1) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"></img>';
+  commentElement.innerHTML += '<p class="social__text">' + comments[i] + '</p>';
+  commentsFragment.appendChild(commentElement);
 }
+
+commentsList.appendChild(commentsFragment);
+
+var caption = document.querySelector('.social__caption');
+caption.textContent = pictures[i].description;
 
 var commentCount = document.querySelector('.social__comment-count');
 commentCount.classList.add('.visually-hidden');
