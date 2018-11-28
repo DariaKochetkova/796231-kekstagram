@@ -57,15 +57,15 @@ for (var i = 0; i < 6; i++) {
   avatars[i] = {
     url: 'img/avatar-' + Math.floor(Math.random() * 6) + '.svg'
   };
+
+  var socialPicture = document.querySelector('.social__picture');
+  socialPicture.src = avatars[i].url;
+  var socialText = document.querySelector('.social__text');
+  socialText.innerHTML = pictures[i].comments;
+
+  var caption = document.querySelector('.social__caption');
+  caption.innerHTML = pictures[i].description;
 }
-
-var socialPicture = document.querySelector('.social__picture');
-socialPicture.src = avatars[i].url;
-var socialText = document.querySelector('.social__text');
-socialText.textContent = pictures[i].comments;
-
-var caption = document.querySelector('.social__caption');
-caption.textContent = pictures[i].description;
 
 var commentCount = document.querySelector('.social__comment-count');
 commentCount.classList.add('.visually-hidden');
