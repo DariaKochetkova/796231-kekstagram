@@ -27,7 +27,7 @@ var similarPictureTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
 
-var renderPictures = function () {
+var renderPictures = function (picture) {
   var pictureElement = similarPictureTemplate.cloneNode(true);
   pictureElement.querySelector('.picture__img').src = pictures[i].url;
   pictureElement.querySelector('.picture__likes').textContent = pictures[i].likes;
@@ -49,24 +49,24 @@ var image = document.querySelector('.big-picture__img');
 image.src = pictures[1].url;
 var likes = document.querySelector('.likes-count');
 likes.textContent = pictures[1].likes;
-var comments = document.querySelector('.comments-count');
-comments.textContent = pictures[1].comments.length;
+var commentsCount = document.querySelector('.comments-count');
+commentsCount.textContent = pictures[1].comments.length;
 
 var commentsFragment = document.createDocumentFragment();
 var commentsList = document.querySelector('.social__comments');
 
-for (var i = 0; i < comments.length; i++) {
+for (var i = 0; i < pictures[1].comments; i++) {
   var commentElement = document.createElement('li');
   commentElement.className = 'social__comment';
   commentElement.innerHTML = '<img class="social__picture" src="img/avatar-' + (Math.floor(Math.random() * 6) + 1) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"></img>';
-  commentElement.innerHTML += '<p class="social__text">' + comments[i] + '</p>';
+  commentElement.innerHTML += '<p class="social__text">' + pictures[1].comments + '</p>';
   commentsFragment.appendChild(commentElement);
 }
 
 commentsList.appendChild(commentsFragment);
 
 var caption = document.querySelector('.social__caption');
-caption.textContent = pictures[i].description;
+caption.textContent = pictures[1].description;
 
 var commentCount = document.querySelector('.social__comment-count');
 commentCount.classList.add('.visually-hidden');
