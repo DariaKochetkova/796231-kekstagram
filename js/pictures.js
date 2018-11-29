@@ -7,11 +7,16 @@ var commentsMax = 10;
 var commentsMin = 5;
 var likesMax = 200;
 var likesMin = 15;
+var avatarsMax = 6;
+var avatarsMin = 1;
+var getRandomNumber = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
 var getRandomElement = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 var getRandomComment = function () {
-  var commentsQuantity = Math.floor(Math.random() * (commentsMax - commentsMin + 1)) + commentsMin;
+  var commentsQuantity = getRandomNumber(commentsMin, commentsMax);
   var currentComments = [];
   for (var i = 0; i < commentsQuantity; i++) {
     var randomComment = getRandomElement(comments);
@@ -23,7 +28,7 @@ var getRandomComment = function () {
 for (var i = 0; i < 25; i++) {
   pictures[i] = {
     url: 'photos/' + (i + 1) + '.jpg',
-    likes: Math.floor(Math.random() * (likesMax - likesMin + 1)) + likesMin,
+    likes: getRandomNumber(likesMin, likesMax),
     comments: getRandomComment(),
     description: getRandomElement(descriptions)
   };
@@ -65,7 +70,7 @@ var commentsList = document.querySelector('.social__comments');
 for (var y = 0; y < pictures[1].comments.length; y++) {
   var commentElement = document.createElement('li');
   commentElement.className = 'social__comment';
-  commentElement.innerHTML = '<img class="social__picture" src="img/avatar-' + (Math.floor(Math.random() * 6) + 1) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"></img>';
+  commentElement.innerHTML = '<img class="social__picture" src="img/avatar-' + getRandomNumber(avatarsMin, avatarsMax) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"></img>';
   commentElement.innerHTML += '<p class="social__text">' + pictures[1].comments[y] + '</p>';
   commentsFragment.appendChild(commentElement);
 }
