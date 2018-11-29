@@ -10,8 +10,6 @@ var LIKES_MAX = 200;
 var LIKES_MIN = 15;
 var AVATARS_MAX = 6;
 var AVATARS_MIN = 1;
-var DESCRIPTIONS_MAX = 6;
-var DESCRIPTIONS_MIN = 6;
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
