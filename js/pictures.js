@@ -16,7 +16,7 @@ var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 var getRandomElement = function (arr) {
-  return arr[getRandomNumber(DESCRIPTIONS_MIN, DESCRIPTIONS_MAX)];
+  return arr[getRandomNumber(0, arr.length)];
 };
 var getRandomComment = function () {
   var commentsQuantity = getRandomNumber(COMMENTS_MIN, COMMENTS_MAX);
