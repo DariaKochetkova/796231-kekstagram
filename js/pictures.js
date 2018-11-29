@@ -1,13 +1,20 @@
 'use strict';
 
 var pictures = [];
-var description = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
+var descriptions = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
+var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
+var commentsMax = 10;
+var commentsMin = 5;
+var likesMax = 200;
+var likesMin = 15;
+var getRandomElement = function (arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+};
 var getRandomComment = function () {
-  var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
-  var commentsQuantity = Math.floor(Math.random() * 6) + 1;
+  var commentsQuantity = Math.floor(Math.random() * (commentsMax - commentsMin + 1)) + commentsMin;
   var currentComments = [];
   for (var i = 0; i < commentsQuantity; i++) {
-    var randomComment = comments[Math.floor(Math.random() * comments.length)];
+    var randomComment = getRandomElement(comments);
     currentComments[i] = randomComment;
   }
   return currentComments;
@@ -16,9 +23,9 @@ var getRandomComment = function () {
 for (var i = 0; i < 25; i++) {
   pictures[i] = {
     url: 'photos/' + (i + 1) + '.jpg',
-    likes: Math.floor(Math.random() * 186) + 15,
+    likes: Math.floor(Math.random() * (likesMax - likesMin + 1)) + likesMin,
     comments: getRandomComment(),
-    description: description[Math.floor(Math.random() * 6)]
+    description: getRandomElement(descriptions)
   };
 }
 
@@ -27,7 +34,7 @@ var similarPictureTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
 
-var renderPictures = function (picture) {
+var renderPicture = function (picture) {
   var pictureElement = similarPictureTemplate.cloneNode(true);
   pictureElement.querySelector('.picture__img').src = picture.url;
   pictureElement.querySelector('.picture__likes').textContent = picture.likes;
@@ -37,8 +44,8 @@ var renderPictures = function (picture) {
 };
 
 var fragment = document.createDocumentFragment();
-for (var i = 0; i < 25; i++) {
-  fragment.appendChild(renderPictures(pictures[i]));
+for (var j = 0; j < 25; j++) {
+  fragment.appendChild(renderPicture(pictures[j]));
 }
 picturesContainer.appendChild(fragment);
 
@@ -55,11 +62,11 @@ commentsCount.textContent = pictures[1].comments.length;
 var commentsFragment = document.createDocumentFragment();
 var commentsList = document.querySelector('.social__comments');
 
-for (var i = 0; i < pictures[1].comments.length; i++) {
+for (var y = 0; y < pictures[1].comments.length; y++) {
   var commentElement = document.createElement('li');
   commentElement.className = 'social__comment';
   commentElement.innerHTML = '<img class="social__picture" src="img/avatar-' + (Math.floor(Math.random() * 6) + 1) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"></img>';
-  commentElement.innerHTML += '<p class="social__text">' + pictures[1].comments[i] + '</p>';
+  commentElement.innerHTML += '<p class="social__text">' + pictures[1].comments[y] + '</p>';
   commentsFragment.appendChild(commentElement);
 }
 
