@@ -12,6 +12,7 @@ var AVATARS_MAX = 6;
 var AVATARS_MIN = 1;
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
+
 var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -58,6 +59,7 @@ for (var j = 0; j < OBJECTS_QUANTITY; j++) {
 picturesContainer.appendChild(fragment);
 
 var bigPicture = document.querySelector('.big-picture');
+
 /*bigPicture.classList.remove('hidden');*/
 
 var renderBigPicture = function (photos) {
@@ -182,3 +184,4 @@ effectButton.addEventListener('click', function () {
     imagePreview.classList.add('effects__preview--heat');
   }
 });
+
