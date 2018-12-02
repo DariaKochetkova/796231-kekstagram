@@ -60,28 +60,30 @@ picturesContainer.appendChild(fragment);
 var bigPicture = document.querySelector('.big-picture');
 /*bigPicture.classList.remove('hidden');*/
 
-var image = document.querySelector('.big-picture__img > img');
-image.src = pictures[1].url;
-var likes = document.querySelector('.likes-count');
-likes.textContent = pictures[1].likes;
-var commentsCount = document.querySelector('.comments-count');
-commentsCount.textContent = pictures[1].comments.length;
+var renderBigPicture = function (photos) {
+  var image = document.querySelector('.big-picture__img > img');
+  image.src = photos.url;
+  var likes = document.querySelector('.likes-count');
+  likes.textContent = photos.likes;
+  var commentsCount = document.querySelector('.comments-count');
+  commentsCount.textContent = photos.comments.length;
 
-var commentsFragment = document.createDocumentFragment();
-var commentsList = document.querySelector('.social__comments');
+  var commentsFragment = document.createDocumentFragment();
+  var commentsList = document.querySelector('.social__comments');
 
-for (var k = 0; k < pictures[1].comments.length; k++) {
-  var commentElement = document.createElement('li');
-  commentElement.className = 'social__comment';
-  commentElement.innerHTML = '<img class="social__picture" src="img/avatar-' + getRandomNumber(AVATARS_MIN, AVATARS_MAX) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"></img>';
-  commentElement.innerHTML += '<p class="social__text">' + pictures[1].comments[k] + '</p>';
-  commentsFragment.appendChild(commentElement);
-}
+  for (var k = 0; k < pictures.comments.length; k++) {
+    var commentElement = document.createElement('li');
+    commentElement.className = 'social__comment';
+    commentElement.innerHTML = '<img class="social__picture" src="img/avatar-' + getRandomNumber(AVATARS_MIN, AVATARS_MAX) + '.svg" alt="Аватар комментатора фотографии" width="35" height="35"></img>';
+    commentElement.innerHTML += '<p class="social__text">' + photos.comments[k] + '</p>';
+    commentsFragment.appendChild(commentElement);
+  }
 
-commentsList.appendChild(commentsFragment);
+  commentsList.appendChild(commentsFragment);
 
-var caption = document.querySelector('.social__caption');
-caption.textContent = pictures[1].description;
+  var caption = document.querySelector('.social__caption');
+  caption.textContent = photos.description;
+};
 
 var commentCount = document.querySelector('.social__comment-count');
 commentCount.classList.add('visually-hidden');
@@ -95,7 +97,7 @@ uploadFile.addEventListener('change', function () {
 });
 var picturePreview = document.querySelector('.picture');
 picturePreview.addEventListener('click', function () {
-  picturePreview.classList.remove('hidden');
+  bigPicture.classList.remove('hidden');
 });
 
 var pictureCancelButton = document.querySelector('#picture-cancel');
