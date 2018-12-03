@@ -15,7 +15,7 @@ var getRandomNumber = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 var getRandomElement = function (arr) {
-  return arr[getRandomNumber(0, arr.length)];
+  return arr[getRandomNumber(0, arr.length - 1)];
 };
 var getRandomComment = function () {
   var commentsQuantity = getRandomNumber(COMMENTS_MIN, COMMENTS_MAX);
@@ -98,7 +98,8 @@ for (var m = 0; m < picturePreview.length; m++) {
   (function (pic) {
     picturePreview[m].addEventListener('click', function () {
       bigPicture.classList.remove('hidden');
-      renderPicture(pic);
+      commentsList.innerHTML = '';
+      renderBigPicture(pic);
     });
   })(pictures[m]);
 }
@@ -135,19 +136,37 @@ cancelButton.addEventListener('keydown', function (evt) {
 var pin = document.querySelector('.effect-level__pin');
 var scale = document.querySelector('.effect-level__line');
 var rangeScale = document.querySelector('.img-upload__effect-level');
-var imagePreview = document.querySelector('.img-upload__preview > img');
+var imagePreview = document.querySelector('.img-upload__preview');
 var effectButtons = document.querySelectorAll('.effects__radio');
+var pinPosition = pin.offsetLeft / scale.offsetWidth * 100;
+var effectLevelValue = document.querySelector('.effect-level__value');
+effectLevelValue.value = pinPosition;
+var className = 'effects__preview--';
+var currentFilter = className + effectButtons.checked;
 
 for (var l = 0; l < effectButtons.length; l++) {
-  var currentFilter = 'effects__preview--' + effectButtons[l];
   effectButtons[l].addEventListener('change', function (evt) {
     var effectName = evt.target.value;
+    if (effectName === 'chrome') {
+      imagePreview.style.filter = 'greyscale(' + chromeIntensity + ')';
+    } else if (effectName === 'sepia') {
+      imagePreview.style.filter = 'sepia(' + sepiaIntensity + ')';
+    } else if (effectName === 'marvin') {
+      imagePreview.style.filter = 'invert(' + marvinIntensity + ')';
+    } else if (effectName === 'phobos') {
+      imagePreview.style.filter = 'blur(' + phobosIntensity + ')';
+    } else if (effectName === 'heat') {
+      imagePreview.style.filter = 'brightness(' + heatIntensity + ')';
+    }
+    if (effectName === 'none') {
+      rangeScale.classList.add('hidden');
+    }
     var changeFilter = function (filterName) {
       if (currentFilter) {
         imagePreview.classList.remove(currentFilter);
       }
-      imagePreview.classList.add(filterName);
-      currentFilter = filterName;
+      imagePreview.classList.add(className + filterName);
+      currentFilter = className + filterName;
 
       return currentFilter;
     };
@@ -155,29 +174,12 @@ for (var l = 0; l < effectButtons.length; l++) {
   });
 }
 
-pin.addEventListener('mouseup', function () {
-  var pinPosition = pin.offsetLeft / scale.offsetWidth * 100;
-  var effectLevelValue = document.querySelector('.effect-level__value');
-  effectLevelValue.value = pinPosition;
-  var getFilterLevel = function () {
-    if (effectButton.value === 'chrome') {
-      return 'filter: greyscale(' + pinPosition + '%)';
-    } else if (effectButton.value === 'sepia') {
-      return 'filter: sepia(' + pinPosition + '%)';
-    } else if (effectButton.value === 'marvin') {
-      return 'filter: invert(' + pinPosition + '%)';
-    } else if (effectButton.value === 'phobos') {
-      return 'filter: blur(' + pinPosition + '%)';
-    } else if (effectButton.value === 'heat') {
-      return 'filter: brightness(' + pinPosition + '%)';
-    }
-  };
-});
-
-/* effectButton.addEventListener('click', function () {
-  if (effectButton.value === 'none') {
-    rangeScale.classList.add('hidden');
-  } else {
-    imagePreview.classList.add('effects__preview--' + effectButton.value);
-  }
-});*/
+var getFilterIntensity = function (max) {
+  return pinPosition * max / 100;
+};
+var chromeIntensity = getFilterIntensity(1);
+var sepiaIntensity = getFilterIntensity(1);
+var marvinIntensity = getFilterIntensity(100) + '%';
+var phobosIntensity = getFilterIntensity(3) + 'px';
+var heatIntensity = getFilterIntensity(2) + 1;
+console.log(scale.offsetWidth);
