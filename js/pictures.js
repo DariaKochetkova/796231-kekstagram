@@ -96,11 +96,11 @@ uploadFile.addEventListener('change', function () {
 var picturePreview = document.querySelectorAll('.picture');
 for (var m = 0; m < picturePreview.length; m++) {
   (function (pic) {
-    pic.addEventListener('click', function () {
+    picturePreview[m].addEventListener('click', function () {
       bigPicture.classList.remove('hidden');
-      renderBigPicture(pictures[m]);
+      renderPicture(pic);
     });
-  })(picturePreview[m]);
+  })(pictures[m]);
 }
 
 var pictureCancelButton = document.querySelector('#picture-cancel');
