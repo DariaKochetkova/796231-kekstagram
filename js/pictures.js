@@ -138,48 +138,62 @@ var scale = document.querySelector('.effect-level__line');
 var rangeScale = document.querySelector('.img-upload__effect-level');
 var imagePreview = document.querySelector('.img-upload__preview');
 var effectButtons = document.querySelectorAll('.effects__radio');
-var pinPosition = pin.offsetLeft / scale.offsetWidth * 100;
-var effectLevelValue = document.querySelector('.effect-level__value');
-effectLevelValue.value = pinPosition;
-var className = 'effects__preview--';
-var currentFilter = className + effectButtons.checked;
 
+/*var effectLevelValue = document.querySelector('.effect-level__value');
+effectLevelValue.value = pinPosition;*/
+
+var effect = {
+  chrome: 'greyscale',
+  sepia: 'sepia',
+  marvin: 'invert',
+  phobos: 'blur',
+  heat: 'brightness'
+};
+var effectDepth = {
+  chrome: '1',
+  sepia: '1',
+  marvin: '100%',
+  phobos: '3px',
+  heat: '3'
+};
+
+var className = 'effects__preview--';
+var currentFilter = className + 'heat';
+var EFFECT_LEVEL_DEFAULT = '100%';
+var setEffectDepth = function (effectName, value) {
+  imagePreview.style.filter = effect[effectName] + '(' + value + ')';
+};
+
+var changeFilter = function (filterName) {
+  if (currentFilter) {
+    imagePreview.classList.remove(currentFilter);
+  }
+  imagePreview.classList.add(className + filterName);
+  currentFilter = className + filterName;
+
+  return currentFilter;
+};
+
+imagePreview.classList.add(currentFilter);
 for (var l = 0; l < effectButtons.length; l++) {
   effectButtons[l].addEventListener('change', function (evt) {
+    setEffectDepth(effectName, effectDepth[effectName]);
     var effectName = evt.target.value;
-    if (effectName === 'chrome') {
-      imagePreview.style.filter = 'greyscale(' + chromeIntensity + ')';
-    } else if (effectName === 'sepia') {
-      imagePreview.style.filter = 'sepia(' + sepiaIntensity + ')';
-    } else if (effectName === 'marvin') {
-      imagePreview.style.filter = 'invert(' + marvinIntensity + ')';
-    } else if (effectName === 'phobos') {
-      imagePreview.style.filter = 'blur(' + phobosIntensity + ')';
-    } else if (effectName === 'heat') {
-      imagePreview.style.filter = 'brightness(' + heatIntensity + ')';
-    }
     if (effectName === 'none') {
       rangeScale.classList.add('hidden');
+    } else {
+      rangeScale.classList.remove('hidden');
     }
-    var changeFilter = function (filterName) {
-      if (currentFilter) {
-        imagePreview.classList.remove(currentFilter);
-      }
-      imagePreview.classList.add(className + filterName);
-      currentFilter = className + filterName;
-
-      return currentFilter;
-    };
     changeFilter(effectName);
+    pin.addEventListener('mouseup', function () {
+      var pinPosition = getPinPosition();
+      var getPinPosition = function () {
+        return pin.offsetLeft / scale.offsetWidth * 100;
+      };
+      var getValue = function (max) {
+        return pinPosition * max / 100;
+      };
+      setEffectDepth(effectName, getValue(effectDepth[effectName]));
+    });
   });
 }
-
-var getFilterIntensity = function (max) {
-  return pinPosition * max / 100;
-};
-var chromeIntensity = getFilterIntensity(1);
-var sepiaIntensity = getFilterIntensity(1);
-var marvinIntensity = getFilterIntensity(100) + '%';
-var phobosIntensity = getFilterIntensity(3) + 'px';
-var heatIntensity = getFilterIntensity(2) + 1;
-console.log(scale.offsetWidth);
