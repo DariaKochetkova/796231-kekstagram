@@ -139,9 +139,6 @@ var rangeScale = document.querySelector('.img-upload__effect-level');
 var imagePreview = document.querySelector('.img-upload__preview');
 var effectButtons = document.querySelectorAll('.effects__radio');
 
-/*var effectLevelValue = document.querySelector('.effect-level__value');
-effectLevelValue.value = pinPosition;*/
-
 var effect = {
   chrome: 'greyscale',
   sepia: 'sepia',
@@ -149,19 +146,37 @@ var effect = {
   phobos: 'blur',
   heat: 'brightness'
 };
-var effectDepth = {
-  chrome: '1',
-  sepia: '1',
-  marvin: '100%',
-  phobos: '3px',
-  heat: '3'
+var effectDepthMax = {
+  chrome: 1,
+  sepia: 1,
+  marvin: 100,
+  phobos: 3,
+  heat: 3
+};
+
+var effectDepthMin = {
+  chrome: 0,
+  sepia: 0,
+  marvin: 0,
+  phobos: 0,
+  heat: 1
+};
+
+var effectString = {
+  chrome: '',
+  sepia: '',
+  marvin: '%',
+  phobos: 'px',
+  heat: ''
 };
 
 var className = 'effects__preview--';
 var currentFilter = className + 'heat';
-var EFFECT_LEVEL_DEFAULT = '100%';
 var setEffectDepth = function (effectName, value) {
-  imagePreview.style.filter = effect[effectName] + '(' + value + ')';
+  imagePreview.style.filter = effect[effectName] + '(' + value + effectString[effectName] + ')';
+  if (effectName === 'none') {
+    imagePreview.style.filter = 'none';
+  }
 };
 
 var changeFilter = function (filterName) {
@@ -177,7 +192,6 @@ var changeFilter = function (filterName) {
 imagePreview.classList.add(currentFilter);
 for (var l = 0; l < effectButtons.length; l++) {
   effectButtons[l].addEventListener('change', function (evt) {
-    setEffectDepth(effectName, effectDepth[effectName]);
     var effectName = evt.target.value;
     if (effectName === 'none') {
       rangeScale.classList.add('hidden');
@@ -185,15 +199,15 @@ for (var l = 0; l < effectButtons.length; l++) {
       rangeScale.classList.remove('hidden');
     }
     changeFilter(effectName);
+    setEffectDepth(effectName, effectDepthMax[effectName]);
     pin.addEventListener('mouseup', function () {
-      var pinPosition = getPinPosition();
       var getPinPosition = function () {
-        return pin.offsetLeft / scale.offsetWidth * 100;
+        return (pin.offsetLeft / scale.offsetWidth * 100);
       };
-      var getValue = function (max) {
-        return pinPosition * max / 100;
+      var getValue = function (max, min) {
+        return getPinPosition() * (max - min) / 100 + min;
       };
-      setEffectDepth(effectName, getValue(effectDepth[effectName]));
+      setEffectDepth(effectName, getValue(effectDepthMax[effectName], effectDepthMin[effectName]));
     });
   });
 }
