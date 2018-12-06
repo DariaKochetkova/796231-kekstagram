@@ -194,6 +194,7 @@ imagePreview.classList.add(currentFilter);
 for (var l = 0; l < effectButtons.length; l++) {
   effectButtons[l].addEventListener('change', function (evt) {
     var effectName = evt.target.value;
+    currentEffect = effectName;
     if (effectName === 'none') {
       rangeScale.classList.add('hidden');
     } else {
@@ -201,17 +202,9 @@ for (var l = 0; l < effectButtons.length; l++) {
     }
     changeFilter(effectName);
     setEffectDepth(effectName, effectDepthMax[effectName]);
-    pin.addEventListener('mouseup', function () {
-      var getPinPosition = function () {
-        return (pin.offsetLeft / scale.offsetWidth * 100);
-      };
-      var getValue = function (max, min) {
-        return getPinPosition() * (max - min) / 100 + min;
-      };
-      setEffectDepth(effectName, getValue(effectDepthMax[effectName], effectDepthMin[effectName]));
-    });
   });
 }
+
 pin.addEventListener('mouseup', function () {
   var getPinPosition = function () {
     return (pin.offsetLeft / scale.offsetWidth * 100);
