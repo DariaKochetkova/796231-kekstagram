@@ -221,7 +221,7 @@ var effcetDecrease = document.querySelector('.scale__control--smaller');
 var PIC_SIZE_DEFAULT = 100;
 var MIN_SIZE_VALUE = 25;
 var MAX_SIZE_VALUE = 100;
-var clickStep = 25;
+var CLICK_STEP = 25;
 var sizeValue = PIC_SIZE_DEFAULT;
 var setPicSize = function () {
   inputValue.value = sizeValue + '%';
@@ -232,14 +232,14 @@ inputValue.value = PIC_SIZE_DEFAULT + '%';
 
 effcetDecrease.addEventListener('click', function () {
   if (sizeValue > MIN_SIZE_VALUE) {
-    sizeValue -= clickStep;
+    sizeValue -= CLICK_STEP;
     setPicSize();
   }
 });
 
 effcetIncrease.addEventListener('click', function () {
   if (sizeValue < MAX_SIZE_VALUE) {
-    sizeValue += clickStep;
+    sizeValue += CLICK_STEP;
     setPicSize();
   }
 });
