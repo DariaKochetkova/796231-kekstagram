@@ -215,30 +215,31 @@ pin.addEventListener('mouseup', function () {
   setEffectDepth(currentEffect, getValue(effectDepthMax[currentEffect], effectDepthMin[currentEffect]));
 });
 
-var valueInput = document.querySelector('.scale__control--value');
+var inputValue = document.querySelector('.scale__control--value');
 var effcetIncrease = document.querySelector('.scale__control--bigger');
 var effcetDecrease = document.querySelector('.scale__control--smaller');
 var PIC_SIZE_DEFAULT = 100;
+var MIN_SIZE_VALUE = 25;
+var MAX_SIZE_VALUE = 100;
 var clickStep = 25;
-var picSize = PIC_SIZE_DEFAULT;
+var sizeValue = PIC_SIZE_DEFAULT;
 var setPicSize = function () {
-  imagePreview.style = 'transform: scale(' + picSize / 100 + ')';
+  inputValue.value = sizeValue + '%';
+  imagePreview.style = 'transform: scale(' + sizeValue / 100 + ')';
 };
 
-valueInput.value = PIC_SIZE_DEFAULT + '%';
+inputValue.value = PIC_SIZE_DEFAULT + '%';
 
 effcetDecrease.addEventListener('click', function () {
-  if (picSize > 25) {
-    picSize -= clickStep;
-    valueInput.value = picSize + '%';
+  if (sizeValue > MIN_SIZE_VALUE) {
+    sizeValue -= clickStep;
     setPicSize();
   }
 });
 
 effcetIncrease.addEventListener('click', function () {
-  if (picSize < 100) {
-    picSize += clickStep;
-    valueInput.value = picSize + '%';
+  if (sizeValue < MAX_SIZE_VALUE) {
+    sizeValue += clickStep;
     setPicSize();
   }
 });
