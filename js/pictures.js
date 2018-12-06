@@ -140,7 +140,7 @@ var imagePreview = document.querySelector('.img-upload__preview');
 var effectButtons = document.querySelectorAll('.effects__radio');
 
 var effect = {
-  chrome: 'greyscale',
+  chrome: 'grayscale',
   sepia: 'sepia',
   marvin: 'invert',
   phobos: 'blur',
@@ -171,7 +171,8 @@ var effectString = {
 };
 
 var className = 'effects__preview--';
-var currentFilter = className + 'heat';
+var currentEffect = 'heat';
+var currentFilter = className + currentEffect;
 var setEffectDepth = function (effectName, value) {
   imagePreview.style.filter = effect[effectName] + '(' + value + effectString[effectName] + ')';
   if (effectName === 'none') {
@@ -211,3 +212,12 @@ for (var l = 0; l < effectButtons.length; l++) {
     });
   });
 }
+pin.addEventListener('mouseup', function () {
+  var getPinPosition = function () {
+    return (pin.offsetLeft / scale.offsetWidth * 100);
+  };
+  var getValue = function (max, min) {
+    return getPinPosition() * (max - min) / 100 + min;
+  };
+  setEffectDepth(currentEffect, getValue(effectDepthMax[currentEffect], effectDepthMin[currentEffect]));
+});
