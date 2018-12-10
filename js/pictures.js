@@ -243,3 +243,44 @@ effcetIncrease.addEventListener('click', function () {
     setPicSize();
   }
 });
+
+var MAX_HASHTAGS = 5;
+var MIN_HASHTAG_LENGTH = 2;
+var MAX_HASHTAG_LENGTH = 20;
+var hash = '#';
+var hashtagsInput = document.querySelector('.text__hashtags');
+
+var hashtags = hashtagsInput.value.split(' ');
+
+hashtagsInput.addEventListener('change', function () {
+  for (var n = 0; n < hashtags.length; n++) {
+    var hashtagIndex = hashtags[n].indexOf(hash);
+    var hashPositions = [];
+    if (hashtagIndex === -1) {
+      hashtagsInput.setCustomValidity('Хэш-тег должен начинаться с "#"');
+    }
+    while (hashtagIndex !== -1) {
+      hashPositions.push(hashtagIndex);
+      hashtagIndex = hashtags[n].indexOf(hash, hashtagIndex + 1);
+    }
+    if (hashPositions.length > 1) {
+      hashtagsInput.setCustomValidity('Хэш-теги должны разделяться пробелами');
+    }
+    if (hashPositions[0] !== 0) {
+      hashtagsInput.setCustomValidity('Хэш-тег должен начинаться с "#"');
+    }
+    if (hashtags[n].length < MIN_HASHTAG_LENGTH) {
+      hashtagsInput.setCustomValidity('Хэш-тег не может состоять из одной решетки');
+    }
+    if (hashtags[n].length > MAX_HASHTAG_LENGTH) {
+      hashtagsInput.setCustomValidity('Длина хэш-тега не может быть более двадцати символов');
+    }
+    console.log(hashtagIndex);
+  }
+  if (hashtags.length > MAX_HASHTAGS) {
+    hashtagsInput.setCustomValidity('Количество хэш-тегов не может превышать пять');
+  }
+
+  hashtagsInput.setCustomValidity('');
+
+});
