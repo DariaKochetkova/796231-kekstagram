@@ -111,25 +111,12 @@ var closeBigPicture = function () {
   bigPicture.classList.add('hidden');
 };
 
-var closeEditPhotoForm = function () {
-  editPhotoForm.classList.add('hidden');
-};
-
 pictureCancelButton.addEventListener('click', function () {
   closeBigPicture();
 });
 pictureCancelButton.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     closeBigPicture();
-  }
-});
-
-cancelButton.addEventListener('click', function () {
-  closeEditPhotoForm();
-});
-cancelButton.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    closeEditPhotoForm();
   }
 });
 
@@ -249,14 +236,20 @@ var MIN_HASHTAG_LENGTH = 2;
 var MAX_HASHTAG_LENGTH = 20;
 var hash = '#';
 var hashtagsInput = document.querySelector('.text__hashtags');
-
-var hashtags = hashtagsInput.value.split(' ');
+var setErrorColor = function () {
+  hashtagsInput.style = 'border: 3px solid red;';
+};
 
 hashtagsInput.addEventListener('change', function () {
+  hashtagsInput.setCustomValidity('');
+  var hashtags = hashtagsInput.value.split(' ');
+  var uniquehashtags = {};
   for (var n = 0; n < hashtags.length; n++) {
+    var hashtagKey = hashtags[n];
     var hashtagIndex = hashtags[n].indexOf(hash);
     var hashPositions = [];
     if (hashtagIndex === -1) {
+      setErrorColor();
       hashtagsInput.setCustomValidity('Хэш-тег должен начинаться с "#"');
     }
     while (hashtagIndex !== -1) {
@@ -264,23 +257,46 @@ hashtagsInput.addEventListener('change', function () {
       hashtagIndex = hashtags[n].indexOf(hash, hashtagIndex + 1);
     }
     if (hashPositions.length > 1) {
+      setErrorColor();
       hashtagsInput.setCustomValidity('Хэш-теги должны разделяться пробелами');
     }
     if (hashPositions[0] !== 0) {
+      setErrorColor();
       hashtagsInput.setCustomValidity('Хэш-тег должен начинаться с "#"');
     }
     if (hashtags[n].length < MIN_HASHTAG_LENGTH) {
+      setErrorColor();
       hashtagsInput.setCustomValidity('Хэш-тег не может состоять из одной решетки');
     }
     if (hashtags[n].length > MAX_HASHTAG_LENGTH) {
+      setErrorColor();
       hashtagsInput.setCustomValidity('Длина хэш-тега не может быть более двадцати символов');
     }
-    console.log(hashtagIndex);
+    if (uniquehashtags[hashtagKey]) {
+      setErrorColor();
+      hashtagsInput.setCustomValidity('Хэш-теги не могут повторяться');
+    }
+    uniquehashtags[hashtagKey] = true;
   }
   if (hashtags.length > MAX_HASHTAGS) {
+    setErrorColor();
     hashtagsInput.setCustomValidity('Количество хэш-тегов не может превышать пять');
   }
+});
 
-  hashtagsInput.setCustomValidity('');
+var closeEditPhotoForm = function () {
+  editPhotoForm.classList.add('hidden');
+};
 
+cancelButton.addEventListener('click', function () {
+  closeEditPhotoForm();
+  /*for (var l = 0; l < effectButtons.length; l++) {
+    effectButtons[l].removeEventListener('change', function (evt);
+  }*/
+});
+
+cancelButton.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeEditPhotoForm();
+  }
 });
