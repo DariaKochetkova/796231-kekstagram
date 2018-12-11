@@ -240,7 +240,8 @@ var setErrorColor = function () {
   hashtagsInput.style = 'border: 3px solid red;';
 };
 
-hashtagsInput.addEventListener('change', function () {
+// РАбОЧАЯ ВЕРСИЯ!
+/*hashtagsInput.addEventListener('change', function () {
   hashtagsInput.setCustomValidity('');
   var hashtags = hashtagsInput.value.split(' ');
   var uniquehashtags = {};
@@ -251,6 +252,7 @@ hashtagsInput.addEventListener('change', function () {
     if (hashtagIndex === -1) {
       setErrorColor();
       hashtagsInput.setCustomValidity('Хэш-тег должен начинаться с "#"');
+      break;
     }
     while (hashtagIndex !== -1) {
       hashPositions.push(hashtagIndex);
@@ -259,22 +261,27 @@ hashtagsInput.addEventListener('change', function () {
     if (hashPositions.length > 1) {
       setErrorColor();
       hashtagsInput.setCustomValidity('Хэш-теги должны разделяться пробелами');
+      break;
     }
     if (hashPositions[0] !== 0) {
       setErrorColor();
       hashtagsInput.setCustomValidity('Хэш-тег должен начинаться с "#"');
+      break;
     }
     if (hashtags[n].length < MIN_HASHTAG_LENGTH) {
       setErrorColor();
       hashtagsInput.setCustomValidity('Хэш-тег не может состоять из одной решетки');
+      break;
     }
     if (hashtags[n].length > MAX_HASHTAG_LENGTH) {
       setErrorColor();
       hashtagsInput.setCustomValidity('Длина хэш-тега не может быть более двадцати символов');
+      break;
     }
     if (uniquehashtags[hashtagKey]) {
       setErrorColor();
       hashtagsInput.setCustomValidity('Хэш-теги не могут повторяться');
+      break;
     }
     uniquehashtags[hashtagKey] = true;
   }
@@ -282,6 +289,81 @@ hashtagsInput.addEventListener('change', function () {
     setErrorColor();
     hashtagsInput.setCustomValidity('Количество хэш-тегов не может превышать пять');
   }
+}); */
+
+//цикл с выносом функций
+
+var checkMissingHash = function () {
+  if (hashtagIndex === -1) {
+    setErrorColor();
+    hashtagsInput.setCustomValidity('Хэш-тег должен начинаться с "#"');
+    break;
+  }
+};
+var checkSpaces = function () {
+  if (hashPositions.length > 1) {
+      setErrorColor();
+      hashtagsInput.setCustomValidity('Хэш-теги должны разделяться пробелами');
+      break;
+    }
+};
+var checkHashFirst = function () {
+  if (hashPositions[0] !== 0) {
+      setErrorColor();
+      hashtagsInput.setCustomValidity('Хэш-тег должен начинаться с "#"');
+      break;
+    }
+};
+var checkMinLength = function () {
+  if (hashtags[n].length < MIN_HASHTAG_LENGTH) {
+      setErrorColor();
+      hashtagsInput.setCustomValidity('Хэш-тег не может состоять из одной решетки');
+      break;
+    }
+};
+var checkMaxLength = function () {
+  if (hashtags[n].length > MAX_HASHTAG_LENGTH) {
+      setErrorColor();
+      hashtagsInput.setCustomValidity('Длина хэш-тега не может быть более двадцати символов');
+      break;
+    }
+};
+var checkRepeat = function () {
+  if (uniquehashtags[hashtagKey]) {
+      setErrorColor();
+      hashtagsInput.setCustomValidity('Хэш-теги не могут повторяться');
+      break;
+    }
+};
+var checkHashtagsQuantity = function () {
+  if (hashtags.length > MAX_HASHTAGS) {
+    setErrorColor();
+    hashtagsInput.setCustomValidity('Количество хэш-тегов не может превышать пять');
+  }
+};
+
+
+hashtagsInput.addEventListener('change', function () {
+  hashtagsInput.setCustomValidity('');
+  var hashtags = hashtagsInput.value.split(' ');
+  var uniquehashtags = {};
+  for (var n = 0; n < hashtags.length; n++) {
+    var hashtagKey = hashtags[n];
+    var hashtagIndex = hashtags[n].indexOf(hash);
+    var hashPositions = [];
+    checkMissingHash();
+    while (hashtagIndex !== -1) {
+      hashPositions.push(hashtagIndex);
+      hashtagIndex = hashtags[n].indexOf(hash, hashtagIndex + 1);
+    }
+    checkSpaces();
+    checkHashFirst();
+    checkMinLength();
+    checkMaxLength();
+    checkRepeat();
+    uniquehashtags[hashtagKey] = true;
+  }
+  checkHashtagsQuantity();
 });
 
 var closeEditPhotoForm = function () {
