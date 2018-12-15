@@ -272,10 +272,8 @@ hashtagsInput.addEventListener('change', function () {
       checkMaxLength(hashtag) ||
       checkRepeat();
     };
-    if (checkHashtag(hashtags[n]) === 'Хэш-теги не могут повторяться') {
-      uniquehashtags[hashtagKey] = true;
-    }
     var error = checkHashtag(hashtags[n]);
+    uniquehashtags[hashtagKey] = true;
     if (error) {
       setErrorColor();
       hashtagsInput.setCustomValidity(error);
