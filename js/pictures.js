@@ -244,14 +244,17 @@ hashtagsInput.addEventListener('change', function () {
   hashtagsInput.setCustomValidity('');
   var hashtags = hashtagsInput.value.split(' ');
   var uniquehashtags = {};
+  var checkHashtagsQuantity = function () {
+    return hashtags.length > MAX_HASHTAGS ? 'Количество хэш-тегов не может превышать пять' : '';
+  };
   for (var n = 0; n < hashtags.length; n++) {
     var hashtagKey = hashtags[n];
-    var hashtagIndex = hashtags[n].lastIndexOf(hash);
     var checkHash = function (hashtag) {
       return hashtag.charAt(0) === '#' ? '' : 'Хэш-тег должен начинаться с "#"';
     };
-    var checkSpaces = function (hashtag) {
-      return hashtag.charAt(0) === '#' & hashtagIndex !== 0 ? 'Хэш-теги должны разделяться пробелами' : '';
+    var checkSpaces = function () {
+      var hashtagIndex = hashtags[n].lastIndexOf(hash);
+      return hashtagIndex !== 0 ? 'Хэш-теги должны разделяться пробелами' : '';
     };
     var checkMinLength = function (hashtag) {
       return hashtag.length < MIN_HASHTAG_LENGTH ? 'Хэш-тег не может состоять из одной решетки' : '';
@@ -262,15 +265,13 @@ hashtagsInput.addEventListener('change', function () {
     var checkRepeat = function () {
       return uniquehashtags[hashtagKey] ? 'Хэш-теги не могут повторяться' : '';
     };
-    var checkHashtagsQuantity = function () {
-      return hashtags.length > MAX_HASHTAGS ? 'Количество хэш-тегов не может превышать пять' : '';
-    };
     var checkHashtag = function (hashtag) {
       return checkHash(hashtag) ||
-      checkSpaces(hashtag) ||
+      checkSpaces() ||
       checkMinLength(hashtag) ||
       checkMaxLength(hashtag) ||
-      checkRepeat();
+      checkRepeat() ||
+      checkHashtagsQuantity();
     };
     var error = checkHashtag(hashtags[n]);
     uniquehashtags[hashtagKey] = true;
@@ -280,7 +281,6 @@ hashtagsInput.addEventListener('change', function () {
       break;
     }
   }
-  checkHashtagsQuantity();
 });
 
 var closeEditPhotoForm = function () {
