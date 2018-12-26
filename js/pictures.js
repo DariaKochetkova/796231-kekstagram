@@ -114,7 +114,6 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
-
 var uploadFile = document.querySelector('#upload-file');
 var editPhotoForm = document.querySelector('.img-upload__overlay');
 uploadFile.addEventListener('change', function () {
@@ -123,9 +122,10 @@ uploadFile.addEventListener('change', function () {
     effectButtons[l].addEventListener('change', setEffect);
   }
   pin.addEventListener('mouseup', setDepth);
-  effcetDecrease.addEventListener('click', setPictureSize(SUBTRACTION));
-  effcetIncrease.addEventListener('click', setPictureSize(ADDITION));
+  effcetDecrease.addEventListener('click', onDecreasePictureClick);
+  effcetIncrease.addEventListener('click', onIncreasePictureClick);
   hashtagsInput.addEventListener('change', checkHashtagInput);
+  document.addEventListener('keydown', escCloseForm);
 });
 var pin = document.querySelector('.effect-level__pin');
 var scale = document.querySelector('.effect-level__line');
@@ -201,6 +201,9 @@ var setDepth = function () {
   var getPinPosition = function () {
     return (pin.offsetLeft / scale.offsetWidth * 100);
   };
+  var pinPosition = getPinPosition();
+  var effectLevelValue = document.querySelector('.effect-level__value');
+  effectLevelValue.value = pinPosition;
   var getValue = function (max, min) {
     return getPinPosition() * (max - min) / 100 + min;
   };
@@ -220,7 +223,7 @@ var ADDITION = 1;
 var sizeValue = PIC_SIZE_DEFAULT;
 var changePicSize = function (value) {
   inputValue.value = value + '%';
-  imagePreview.style = 'transform: scale(' + value / 100 + ')';
+  imagePreview.style.transform = 'scale(' + value / 100 + ')';
 };
 
 inputValue.value = PIC_SIZE_DEFAULT + '%';
@@ -311,8 +314,7 @@ var form = document.querySelector('.img-upload__form');
 var closeEditPhotoForm = function () {
   editPhotoForm.classList.add('hidden');
 };
-
-cancelButton.addEventListener('click', function () {
+var cleanForm = function () {
   closeEditPhotoForm();
   for (var o = 0; o < effectButtons.length; o++) {
     effectButtons[o].removeEventListener('change', setEffect);
@@ -321,22 +323,18 @@ cancelButton.addEventListener('click', function () {
   effcetDecrease.removeEventListener('click', onDecreasePictureClick);
   effcetIncrease.removeEventListener('click', onIncreasePictureClick);
   hashtagsInput.removeEventListener('change', checkHashtagInput);
-  form.reset();
-  imagePreview.style.filter = 'none';
   rangeScale.classList.add('hidden');
   changePicSize(PIC_SIZE_DEFAULT);
-});
+  sizeValue = PIC_SIZE_DEFAULT;
+  imagePreview.style.filter = 'none';
+  imagePreview.classList.remove(currentFilter);
+};
+cancelButton.addEventListener('click', cleanForm);
 
 var escCloseForm = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
-    closeEditPhotoForm();
-    for (var p = 0; p < effectButtons.length; p++) {
-      effectButtons[p].removeEventListener('change', setEffect);
-    }
-    pin.removeEventListener('mouseup', setDepth);
-    effcetDecrease.removeEventListener('click', setPictureSize(SUBTRACTION));
-    effcetIncrease.removeEventListener('click', setPictureSize(ADDITION));
-    hashtagsInput.removeEventListener('change', checkHashtagInput);
+    cleanForm();
+    form.reset();
+    document.removeEventListener('keydown', escCloseForm);
   }
 };
-document.addEventListener('keydown', escCloseForm);
