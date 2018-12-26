@@ -80,6 +80,14 @@ var renderBigPicture = function (photo) {
   commentsList.appendChild(commentsFragment);
 
   caption.textContent = photo.description;
+  pictureCancelButton.addEventListener('click', function () {
+    closeBigPicture();
+  });
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      closeBigPicture();
+    }
+  });
 };
 
 var commentCount = document.querySelector('.social__comment-count');
@@ -103,16 +111,15 @@ var cancelButton = document.querySelector('#upload-cancel');
 
 var closeBigPicture = function () {
   bigPicture.classList.add('hidden');
-};
-
-pictureCancelButton.addEventListener('click', function () {
-  closeBigPicture();
-});
-document.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  pictureCancelButton.removeEventListener('click', function () {
     closeBigPicture();
-  }
-});
+  });
+  document.removeEventListener('keydown', function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      closeBigPicture();
+    }
+  });
+};
 
 var uploadFile = document.querySelector('#upload-file');
 var editPhotoForm = document.querySelector('.img-upload__overlay');
@@ -132,6 +139,7 @@ var scale = document.querySelector('.effect-level__line');
 var rangeScale = document.querySelector('.img-upload__effect-level');
 var imagePreview = document.querySelector('.img-upload__preview');
 var effectButtons = document.querySelectorAll('.effects__radio');
+var DEFAULT_EFFECT = 'none';
 
 var effect = {
   chrome: 'grayscale',
@@ -169,8 +177,8 @@ var currentEffect = 'heat';
 var currentFilter = className + currentEffect;
 var setEffectDepth = function (effectName, value) {
   imagePreview.style.filter = effect[effectName] + '(' + value + effectString[effectName] + ')';
-  if (effectName === 'none') {
-    imagePreview.style.filter = 'none';
+  if (effectName === DEFAULT_EFFECT) {
+    imagePreview.style.filter = DEFAULT_EFFECT;
   }
 };
 
@@ -188,7 +196,7 @@ imagePreview.classList.add(currentFilter);
 var setEffect = function (evt) {
   var effectName = evt.target.value;
   currentEffect = effectName;
-  if (effectName === 'none') {
+  if (effectName === DEFAULT_EFFECT) {
     rangeScale.classList.add('hidden');
   } else {
     rangeScale.classList.remove('hidden');
@@ -309,7 +317,6 @@ var checkHashtagInput = function () {
   }
 };
 
-
 var form = document.querySelector('.img-upload__form');
 var closeEditPhotoForm = function () {
   editPhotoForm.classList.add('hidden');
@@ -326,8 +333,9 @@ var cleanForm = function () {
   rangeScale.classList.add('hidden');
   changePicSize(PIC_SIZE_DEFAULT);
   sizeValue = PIC_SIZE_DEFAULT;
-  imagePreview.style.filter = 'none';
+  imagePreview.style.filter = DEFAULT_EFFECT;
   imagePreview.classList.remove(currentFilter);
+  hashtagsInput.style = 'border: none;';
 };
 cancelButton.addEventListener('click', cleanForm);
 
