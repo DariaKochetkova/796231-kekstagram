@@ -62,6 +62,14 @@ var likes = document.querySelector('.likes-count');
 var commentsCount = document.querySelector('.comments-count');
 var commentsList = document.querySelector('.social__comments');
 var caption = document.querySelector('.social__caption');
+var onCloseButtonClick = function () {
+  closeBigPicture();
+};
+var onPictureEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeBigPicture();
+  }
+};
 
 var renderBigPicture = function (photo) {
   image.src = photo.url;
@@ -80,14 +88,8 @@ var renderBigPicture = function (photo) {
   commentsList.appendChild(commentsFragment);
 
   caption.textContent = photo.description;
-  pictureCancelButton.addEventListener('click', function () {
-    closeBigPicture();
-  });
-  document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      closeBigPicture();
-    }
-  });
+  pictureCancelButton.addEventListener('click', onCloseButtonClick);
+  document.addEventListener('keydown', onPictureEscPress);
 };
 
 var commentCount = document.querySelector('.social__comment-count');
@@ -111,14 +113,8 @@ var cancelButton = document.querySelector('#upload-cancel');
 
 var closeBigPicture = function () {
   bigPicture.classList.add('hidden');
-  pictureCancelButton.removeEventListener('click', function () {
-    closeBigPicture();
-  });
-  document.removeEventListener('keydown', function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      closeBigPicture();
-    }
-  });
+  pictureCancelButton.removeEventListener('click', onCloseButtonClick);
+  document.removeEventListener('keydown', onPictureEscPress);
 };
 
 var uploadFile = document.querySelector('#upload-file');
@@ -173,7 +169,7 @@ var effectString = {
 };
 
 var className = 'effects__preview--';
-var currentEffect = 'heat';
+var currentEffect = 'none';
 var currentFilter = className + currentEffect;
 var setEffectDepth = function (effectName, value) {
   imagePreview.style.filter = effect[effectName] + '(' + value + effectString[effectName] + ')';
