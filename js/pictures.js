@@ -124,7 +124,7 @@ uploadFile.addEventListener('change', function () {
   for (var l = 0; l < effectButtons.length; l++) {
     effectButtons[l].addEventListener('change', setEffect);
   }
-  pin.addEventListener('mouseup', setDepth);
+  pin.addEventListener('mousedown', onMouseDown);
   effcetDecrease.addEventListener('click', onDecreasePictureClick);
   effcetIncrease.addEventListener('click', onIncreasePictureClick);
   hashtagsInput.addEventListener('change', checkHashtagInput);
@@ -132,6 +132,7 @@ uploadFile.addEventListener('change', function () {
 });
 var pin = document.querySelector('.effect-level__pin');
 var scale = document.querySelector('.effect-level__line');
+var depthScale = document.querySelector('.effect-level__depth');
 var rangeScale = document.querySelector('.img-upload__effect-level');
 var imagePreview = document.querySelector('.img-upload__preview');
 var effectButtons = document.querySelectorAll('.effects__radio');
@@ -196,24 +197,53 @@ var setEffect = function (evt) {
     rangeScale.classList.add('hidden');
   } else {
     rangeScale.classList.remove('hidden');
+    pin.style.left = scale.offsetWidth + 'px';
+    depthScale.style.width = scale.offsetWidth + 'px';
   }
   changeFilter(effectName);
   setEffectDepth(effectName, effectDepthMax[effectName]);
+
 };
 
-var setDepth = function () {
-  var getPinPosition = function () {
-    return (pin.offsetLeft / scale.offsetWidth * 100);
-  };
-  var pinPosition = getPinPosition();
-  var effectLevelValue = document.querySelector('.effect-level__value');
-  effectLevelValue.value = pinPosition;
-  var getValue = function (max, min) {
-    return getPinPosition() * (max - min) / 100 + min;
-  };
-  setEffectDepth(currentEffect, getValue(effectDepthMax[currentEffect], effectDepthMin[currentEffect]));
-};
+var onMouseDown = function (evt) {
+  evt.preventDefault();
 
+  var startPinCoord = evt.clientX;
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = startPinCoord - moveEvt.clientX;
+    startPinCoord = moveEvt.clientX;
+    var pinCoord = pin.offsetLeft - shift;
+    if (pinCoord < 0) {
+      pinCoord = 0;
+    }
+    if (pinCoord > scale.offsetWidth) {
+      pinCoord = scale.offsetWidth;
+    }
+    pin.style.left = pinCoord + 'px';
+    depthScale.style.width = pinCoord + 'px';
+    var getPinPosition = function () {
+      return (pin.offsetLeft / scale.offsetWidth * 100);
+    };
+    var pinPosition = getPinPosition();
+    var effectLevelValue = document.querySelector('.effect-level__value');
+    effectLevelValue.value = pinPosition;
+    var getValue = function (max, min) {
+      return getPinPosition() * (max - min) / 100 + min;
+    };
+    setEffectDepth(currentEffect, getValue(effectDepthMax[currentEffect], effectDepthMin[currentEffect]));
+  };
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+};
 
 var inputValue = document.querySelector('.scale__control--value');
 var effcetIncrease = document.querySelector('.scale__control--bigger');
@@ -322,7 +352,7 @@ var cleanForm = function () {
   for (var o = 0; o < effectButtons.length; o++) {
     effectButtons[o].removeEventListener('change', setEffect);
   }
-  pin.removeEventListener('mouseup', setDepth);
+  pin.removeEventListener('mouseup', onMouseDown);
   effcetDecrease.removeEventListener('click', onDecreasePictureClick);
   effcetIncrease.removeEventListener('click', onIncreasePictureClick);
   hashtagsInput.removeEventListener('change', checkHashtagInput);
