@@ -124,7 +124,7 @@ uploadFile.addEventListener('change', function () {
   for (var l = 0; l < effectButtons.length; l++) {
     effectButtons[l].addEventListener('change', setEffect);
   }
-  pin.addEventListener('mouseup', setDepth);
+  pin.addEventListener('mousedown', onPinMouseDown);
   effcetDecrease.addEventListener('click', onDecreasePictureClick);
   effcetIncrease.addEventListener('click', onIncreasePictureClick);
   hashtagsInput.addEventListener('change', checkHashtagInput);
@@ -132,9 +132,11 @@ uploadFile.addEventListener('change', function () {
 });
 var pin = document.querySelector('.effect-level__pin');
 var scale = document.querySelector('.effect-level__line');
+var depthScale = document.querySelector('.effect-level__depth');
 var rangeScale = document.querySelector('.img-upload__effect-level');
 var imagePreview = document.querySelector('.img-upload__preview');
 var effectButtons = document.querySelectorAll('.effects__radio');
+var effectLevelValue = document.querySelector('.effect-level__value');
 var DEFAULT_EFFECT = 'none';
 
 var effect = {
@@ -187,7 +189,9 @@ var changeFilter = function (filterName) {
 
   return currentFilter;
 };
-
+var setDepthStyle = function (value) {
+  return value + 'px';
+};
 imagePreview.classList.add(currentFilter);
 var setEffect = function (evt) {
   var effectName = evt.target.value;
@@ -196,24 +200,55 @@ var setEffect = function (evt) {
     rangeScale.classList.add('hidden');
   } else {
     rangeScale.classList.remove('hidden');
+    pin.style.left = setDepthStyle(scale.offsetWidth);
+    depthScale.style.width = setDepthStyle(scale.offsetWidth);
+    setInputValue();
   }
   changeFilter(effectName);
   setEffectDepth(effectName, effectDepthMax[effectName]);
 };
 
-var setDepth = function () {
-  var getPinPosition = function () {
-    return (pin.offsetLeft / scale.offsetWidth * 100);
-  };
-  var pinPosition = getPinPosition();
-  var effectLevelValue = document.querySelector('.effect-level__value');
-  effectLevelValue.value = pinPosition;
-  var getValue = function (max, min) {
-    return getPinPosition() * (max - min) / 100 + min;
-  };
-  setEffectDepth(currentEffect, getValue(effectDepthMax[currentEffect], effectDepthMin[currentEffect]));
+var getPinPosition = function () {
+  return Math.round(pin.offsetLeft / scale.offsetWidth * 100);
 };
+var setInputValue = function () {
+  effectLevelValue.value = pinPosition;
+};
+var pinPosition = getPinPosition();
+var onPinMouseDown = function (evt) {
+  evt.preventDefault();
 
+  var startPinCoord = evt.clientX;
+  var onPinMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = startPinCoord - moveEvt.clientX;
+    startPinCoord = moveEvt.clientX;
+    var pinCoord = pin.offsetLeft - shift;
+    if (pinCoord < 0) {
+      pinCoord = 0;
+    }
+    if (pinCoord > scale.offsetWidth) {
+      pinCoord = scale.offsetWidth;
+    }
+    pin.style.left = setDepthStyle(pinCoord);
+    depthScale.style.width = setDepthStyle(pinCoord);
+    setInputValue();
+    var getValue = function (max, min) {
+      return getPinPosition() * (max - min) / 100 + min;
+    };
+    setEffectDepth(currentEffect, getValue(effectDepthMax[currentEffect], effectDepthMin[currentEffect]));
+  };
+  var onPinMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onPinMouseMove);
+    document.removeEventListener('mouseup', onPinMouseUp);
+  };
+
+  document.addEventListener('mousemove', onPinMouseMove);
+  document.addEventListener('mouseup', onPinMouseUp);
+};
 
 var inputValue = document.querySelector('.scale__control--value');
 var effcetIncrease = document.querySelector('.scale__control--bigger');
@@ -322,7 +357,7 @@ var cleanForm = function () {
   for (var o = 0; o < effectButtons.length; o++) {
     effectButtons[o].removeEventListener('change', setEffect);
   }
-  pin.removeEventListener('mouseup', setDepth);
+  pin.removeEventListener('mousedown', onPinMouseDown);
   effcetDecrease.removeEventListener('click', onDecreasePictureClick);
   effcetIncrease.removeEventListener('click', onIncreasePictureClick);
   hashtagsInput.removeEventListener('change', checkHashtagInput);
