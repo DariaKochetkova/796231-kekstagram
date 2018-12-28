@@ -202,11 +202,19 @@ var setEffect = function (evt) {
     rangeScale.classList.remove('hidden');
     pin.style.left = setDepthStyle(scale.offsetWidth);
     depthScale.style.width = setDepthStyle(scale.offsetWidth);
+    setInputValue();
   }
   changeFilter(effectName);
   setEffectDepth(effectName, effectDepthMax[effectName]);
 };
 
+var getPinPosition = function () {
+  return Math.round(pin.offsetLeft / scale.offsetWidth * 100);
+};
+var setInputValue = function () {
+  effectLevelValue.value = pinPosition;
+};
+var pinPosition = getPinPosition();
 var onPinMouseDown = function (evt) {
   evt.preventDefault();
 
@@ -225,11 +233,7 @@ var onPinMouseDown = function (evt) {
     }
     pin.style.left = setDepthStyle(pinCoord);
     depthScale.style.width = setDepthStyle(pinCoord);
-    var getPinPosition = function () {
-      return Math.round(pin.offsetLeft / scale.offsetWidth * 100);
-    };
-    var pinPosition = getPinPosition();
-    effectLevelValue.value = pinPosition;
+    setInputValue();
     var getValue = function (max, min) {
       return getPinPosition() * (max - min) / 100 + min;
     };
