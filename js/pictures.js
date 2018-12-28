@@ -124,7 +124,7 @@ uploadFile.addEventListener('change', function () {
   for (var l = 0; l < effectButtons.length; l++) {
     effectButtons[l].addEventListener('change', setEffect);
   }
-  pin.addEventListener('mousedown', onMouseDown);
+  pin.addEventListener('mousedown', onPinMouseDown);
   effcetDecrease.addEventListener('click', onDecreasePictureClick);
   effcetIncrease.addEventListener('click', onIncreasePictureClick);
   hashtagsInput.addEventListener('change', checkHashtagInput);
@@ -136,6 +136,7 @@ var depthScale = document.querySelector('.effect-level__depth');
 var rangeScale = document.querySelector('.img-upload__effect-level');
 var imagePreview = document.querySelector('.img-upload__preview');
 var effectButtons = document.querySelectorAll('.effects__radio');
+var effectLevelValue = document.querySelector('.effect-level__value');
 var DEFAULT_EFFECT = 'none';
 
 var effect = {
@@ -188,7 +189,9 @@ var changeFilter = function (filterName) {
 
   return currentFilter;
 };
-
+var setDepthStyle = function (value) {
+  return value + 'px';
+};
 imagePreview.classList.add(currentFilter);
 var setEffect = function (evt) {
   var effectName = evt.target.value;
@@ -197,19 +200,18 @@ var setEffect = function (evt) {
     rangeScale.classList.add('hidden');
   } else {
     rangeScale.classList.remove('hidden');
-    pin.style.left = scale.offsetWidth + 'px';
-    depthScale.style.width = scale.offsetWidth + 'px';
+    pin.style.left = setDepthStyle(scale.offsetWidth);
+    depthScale.style.width = setDepthStyle(scale.offsetWidth);
   }
   changeFilter(effectName);
   setEffectDepth(effectName, effectDepthMax[effectName]);
-
 };
 
-var onMouseDown = function (evt) {
+var onPinMouseDown = function (evt) {
   evt.preventDefault();
 
   var startPinCoord = evt.clientX;
-  var onMouseMove = function (moveEvt) {
+  var onPinMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
 
     var shift = startPinCoord - moveEvt.clientX;
@@ -221,28 +223,27 @@ var onMouseDown = function (evt) {
     if (pinCoord > scale.offsetWidth) {
       pinCoord = scale.offsetWidth;
     }
-    pin.style.left = pinCoord + 'px';
-    depthScale.style.width = pinCoord + 'px';
+    pin.style.left = setDepthStyle(pinCoord);
+    depthScale.style.width = setDepthStyle(pinCoord);
     var getPinPosition = function () {
-      return (pin.offsetLeft / scale.offsetWidth * 100);
+      return Math.round(pin.offsetLeft / scale.offsetWidth * 100);
     };
     var pinPosition = getPinPosition();
-    var effectLevelValue = document.querySelector('.effect-level__value');
     effectLevelValue.value = pinPosition;
     var getValue = function (max, min) {
       return getPinPosition() * (max - min) / 100 + min;
     };
     setEffectDepth(currentEffect, getValue(effectDepthMax[currentEffect], effectDepthMin[currentEffect]));
   };
-  var onMouseUp = function (upEvt) {
+  var onPinMouseUp = function (upEvt) {
     upEvt.preventDefault();
 
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
+    document.removeEventListener('mousemove', onPinMouseMove);
+    document.removeEventListener('mouseup', onPinMouseUp);
   };
 
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
+  document.addEventListener('mousemove', onPinMouseMove);
+  document.addEventListener('mouseup', onPinMouseUp);
 };
 
 var inputValue = document.querySelector('.scale__control--value');
@@ -352,7 +353,7 @@ var cleanForm = function () {
   for (var o = 0; o < effectButtons.length; o++) {
     effectButtons[o].removeEventListener('change', setEffect);
   }
-  pin.removeEventListener('mouseup', onMouseDown);
+  pin.removeEventListener('mousedown', onPinMouseDown);
   effcetDecrease.removeEventListener('click', onDecreasePictureClick);
   effcetIncrease.removeEventListener('click', onIncreasePictureClick);
   hashtagsInput.removeEventListener('change', checkHashtagInput);
