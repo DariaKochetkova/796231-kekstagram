@@ -109,7 +109,6 @@ for (var m = 0; m < picturePreview.length; m++) {
 }
 
 var pictureCancelButton = document.querySelector('#picture-cancel');
-var cancelButton = document.querySelector('#upload-cancel');
 
 var closeBigPicture = function () {
   bigPicture.classList.add('hidden');
@@ -117,6 +116,7 @@ var closeBigPicture = function () {
   document.removeEventListener('keydown', onPictureEscPress);
 };
 
+var cancelButton = document.querySelector('#upload-cancel');
 var uploadFile = document.querySelector('#upload-file');
 var editPhotoForm = document.querySelector('.img-upload__overlay');
 uploadFile.addEventListener('change', function () {
