@@ -31,6 +31,7 @@
       phobos: 'px',
       heat: ''
     },
-    PIC_SIZE_DEFAULT: 100
+    PIC_SIZE_DEFAULT: 100,
+    ESC_KEYCODE: 27
   };
 })();

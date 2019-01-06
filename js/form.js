@@ -109,6 +109,24 @@
   var effectDecrease = document.querySelector('.scale__control--smaller');
 
   var form = document.querySelector('.img-upload__form');
+
+  form.addEventListener('submit', function (evt) {
+    window.backend(new FormData(form), function () {
+      editPhotoForm.classList.add('hidden');
+      cleanForm();
+      form.reset();
+      var messageContainer = document.querySelector('main');
+      var successMessageTemplate = document.querySelector('#success')
+        .content
+        .querySelector('.success');
+
+      var successMessage = successMessageTemplate.cloneNode(true);
+      messageContainer.appendChild(successMessage);
+    });
+    evt.preventDefault();
+
+  });
+
   var closeEditPhotoForm = function () {
     editPhotoForm.classList.add('hidden');
   };
@@ -120,18 +138,18 @@
     pin.removeEventListener('mousedown', onPinMouseDown);
     effectDecrease.removeEventListener('click', window.previewSize.onDecreasePictureClick);
     effectIncrease.removeEventListener('click', window.previewSize.onIncreasePictureClick);
-    window.hashtag.hashtagsInput.removeEventListener('change', window.hashtag.checkHashtagInput);
+    window.hashtags.hashtagsInput.removeEventListener('change', window.hashtags.checkHashtagInput);
     rangeScale.classList.add('hidden');
     window.previewSize.changePicSize(window.utils.PIC_SIZE_DEFAULT);
     window.previewSize.sizeValue = window.utils.PIC_SIZE_DEFAULT;
     window.imagePreview.style.filter = DEFAULT_EFFECT;
     window.imagePreview.classList.remove(currentFilter);
-    window.hashtag.hashtagsInput.style = 'border: none;';
+    window.hashtags.hashtagsInput.style = 'border: none;';
   };
   cancelButton.addEventListener('click', cleanForm);
 
   var escCloseForm = function (evt) {
-    if (evt.keyCode === window.data.ESC_KEYCODE) {
+    if (evt.keyCode === window.utils.ESC_KEYCODE) {
       cleanForm();
       form.reset();
       document.removeEventListener('keydown', escCloseForm);
