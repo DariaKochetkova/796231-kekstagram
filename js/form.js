@@ -115,13 +115,6 @@
       editPhotoForm.classList.add('hidden');
       cleanForm();
       form.reset();
-      var messageContainer = document.querySelector('main');
-      var successMessageTemplate = document.querySelector('#success')
-        .content
-        .querySelector('.success');
-
-      var successMessage = successMessageTemplate.cloneNode(true);
-      messageContainer.appendChild(successMessage);
     });
     evt.preventDefault();
 
