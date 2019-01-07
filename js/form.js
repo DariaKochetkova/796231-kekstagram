@@ -123,6 +123,18 @@
       messageContainer.appendChild(successMessage);
       var successButton = document.querySelector('.success__button');
       window.getMessage(successMessage, successButton);
+    }, function (message) {
+      var messageContainer = document.querySelector('main');
+      var errorMessageTemplate = document.querySelector('#error')
+          .content
+          .querySelector('.error');
+      var errorMessage = errorMessageTemplate.cloneNode(true);
+      errorMessage.querySelector('.error__title').textContent = message;
+      messageContainer.appendChild(errorMessage);
+
+      var errorButton = document.querySelector('.error__button');
+
+      window.getMessage(errorMessage, errorButton);
     });
     evt.preventDefault();
   });
