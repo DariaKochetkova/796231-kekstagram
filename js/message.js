@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  window.serverResponse = function (message, button) {
+  window.getMessage = function (message, button) {
     var hideMessage = function () {
       message.remove();
     };

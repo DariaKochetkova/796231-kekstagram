@@ -54,9 +54,9 @@
       xhr.open('GET', DATA_URL);
       xhr.send();
     },
-    sendForm: function (data, onLoad) {
+    sendForm: function (data, onLoad, onError) {
 
-      var xhr = getXHR(onLoad);
+      var xhr = getXHR(onLoad, onError);
 
       xhr.open('POST', URL);
       xhr.send(data);

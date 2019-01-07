@@ -66,10 +66,10 @@
       document.addEventListener('keydown', onPictureEscPress);
     };
 
-    var picturePreview = document.querySelectorAll('.picture');
-    for (var m = 0; m < picturePreview.length; m++) {
+    var picturePreviews = document.querySelectorAll('.picture');
+    for (var m = 0; m < picturePreviews.length; m++) {
       (function (picture) {
-        picturePreview[m].addEventListener('click', function () {
+        picturePreviews[m].addEventListener('click', function () {
           bigPicture.classList.remove('hidden');
           commentsList.innerHTML = '';
           renderBigPicture(picture);
@@ -97,7 +97,7 @@
 
     var errorButton = document.querySelector('.error__button');
 
-    window.serverResponse(errorMessage, errorButton);
+    window.getMessage(errorMessage, errorButton);
   };
   window.backend.getPictures(onLoad, onError);
 })();

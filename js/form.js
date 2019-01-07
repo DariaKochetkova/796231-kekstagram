@@ -122,7 +122,7 @@
       var successMessage = successMessageTemplate.cloneNode(true);
       messageContainer.appendChild(successMessage);
       var successButton = document.querySelector('.success__button');
-      window.serverResponse(successMessage, successButton);
+      window.getMessage(successMessage, successButton);
     });
     evt.preventDefault();
   });
