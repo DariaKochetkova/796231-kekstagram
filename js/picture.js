@@ -84,6 +84,20 @@
       pictureCancelButton.removeEventListener('click', onCloseButtonClick);
       document.removeEventListener('keydown', onPictureEscPress);
     };
+
   };
-  window.backend.getPictures(onLoad);
+  var messageContainer = document.querySelector('main');
+  var errorMessageTemplate = document.querySelector('#error')
+      .content
+      .querySelector('.error');
+  var onError = function (message) {
+    var errorMessage = errorMessageTemplate.cloneNode(true);
+    errorMessage.querySelector('.error__title').textContent = message;
+    messageContainer.appendChild(errorMessage);
+
+    var errorButton = document.querySelector('.error__button');
+
+    window.serverResponse(errorMessage, errorButton);
+  };
+  window.backend.getPictures(onLoad, onError);
 })();
