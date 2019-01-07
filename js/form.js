@@ -111,13 +111,46 @@
   var form = document.querySelector('.img-upload__form');
 
   form.addEventListener('submit', function (evt) {
-    window.backend(new FormData(form), function () {
+    window.backend.sendForm(new FormData(form), function () {
       editPhotoForm.classList.add('hidden');
       cleanForm();
       form.reset();
     });
     evt.preventDefault();
+    var messageContainer = document.querySelector('main');
+    var successMessageTemplate = document.querySelector('#success')
+      .content
+      .querySelector('.success');
 
+    var successMessage = successMessageTemplate.cloneNode(true);
+    messageContainer.appendChild(successMessage);
+
+    var successButton = document.querySelector('.success__button');
+
+    var hideMessage = function () {
+      successMessage.remove();
+    };
+    var removeListeners = function () {
+      hideMessage();
+      document.removeEventListener('keydown', onEscCloseMessage);
+      document.removeEventListener('click', onScreenClick);
+    };
+    var onMessageButtonClick = function () {
+      removeListeners();
+    };
+    var onEscCloseMessage = function () {
+      if (evt.keyCode === window.utils.ESC_KEYCODE) {
+        hideMessage();
+        document.removeEventListener('keydown', onEscCloseMessage);
+      }
+    };
+    var onScreenClick = function () {
+      removeListeners();
+    };
+
+    successButton.addEventListener('click', onMessageButtonClick);
+    document.addEventListener('click', onScreenClick);
+    document.addEventListener('keydown', onEscCloseMessage);
   });
 
   var closeEditPhotoForm = function () {

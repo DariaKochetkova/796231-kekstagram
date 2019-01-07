@@ -1,36 +1,72 @@
 'use strict';
 
 (function () {
-  window.load = function (onLoad, onError) {
+  var SUCCESS_CODE = 200;
+  var REQUEST_TIMEOUT = 10000;
+  var URL = 'https://js.dump.academy/kekstagram';
+  var DATA_URL = 'https://js.dump.academy/kekstagram/data';
+  var codeErrorToText = {
+    '400': 'Неверный запрос',
+    '401': 'Пользователь не авторизован',
+    '404': 'По данному запросу ничего не найдено',
+    '500': 'Внутренняя ошибка сервера. Попробуйте позже!'
+  };
+
+  var getXHR = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
+
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+
+      if (xhr.status === SUCCESS_CODE) {
         onLoad(xhr.response);
       } else {
-        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        var error =
+          codeErrorToText[xhr.status] ||
+          'Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText;
+        onError(error);
       }
     });
 
+    setRequestErrorsInterpreter(xhr, onError);
+
+    return xhr;
+  };
+
+  var setRequestErrorsInterpreter = function (xhr, onError) {
     xhr.addEventListener('error', function () {
       onError('Произошла ошибка соединения');
     });
+
     xhr.addEventListener('timeout', function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 10000;
+    xhr.timeout = REQUEST_TIMEOUT;
+  };
 
-    xhr.open('GET', 'https://js.dump.academy/kekstagram/data');
-    xhr.send();
+  window.backend = {
+    getPictures: function (onLoad, onError) {
+
+      var xhr = getXHR(onLoad, onError);
+
+      xhr.open('GET', DATA_URL);
+      xhr.send();
+    },
+    sendForm: function (data, onLoad) {
+
+      var xhr = getXHR(onLoad, onError);
+
+      xhr.open('POST', URL);
+      xhr.send(data);
+    }
   };
   var messageContainer = document.querySelector('main');
-  var onError = function (message) {
-    var errorMessageTemplate = document.querySelector('#error')
+  var errorMessageTemplate = document.querySelector('#error')
       .content
-      .querySelector('.success');
-
+      .querySelector('.error');
+  var onError = function (message) {
     var errorMessage = errorMessageTemplate.cloneNode(true);
     errorMessage.querySelector('.error__title').textContent = message;
     messageContainer.appendChild(errorMessage);
@@ -38,10 +74,15 @@
     var errorButton = document.querySelector('.error__button');
 
     var hideMessage = function () {
-      errorMessage.classList.add('visually-hidden');
+      errorMessage.remove();
+    };
+    var removeListeners = function () {
+      hideMessage();
+      document.removeEventListener('keydown', onEscCloseMessage);
+      document.removeEventListener('click', onScreenClick);
     };
     var onMessageButtonClick = function () {
-      hideMessage();
+      removeListeners();
     };
     var onEscCloseMessage = function (evt) {
       if (evt.keyCode === window.utils.ESC_KEYCODE) {
@@ -49,61 +90,12 @@
         document.removeEventListener('keydown', onEscCloseMessage);
       }
     };
+    var onScreenClick = function () {
+      removeListeners();
+    };
 
     errorButton.addEventListener('click', onMessageButtonClick);
-    document.addEventListener('click', onMessageButtonClick);
+    document.addEventListener('click', onScreenClick);
     document.addEventListener('keydown', onEscCloseMessage);
-  };
-
-  var URL = 'https://js.dump.academy/kekstagram';
-
-  window.backend = function (data, onLoad) {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-
-    xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
-        onLoad(xhr.response);
-
-        var successMessageTemplate = document.querySelector('#success')
-          .content
-          .querySelector('.success');
-
-        var successMessage = successMessageTemplate.cloneNode(true);
-        messageContainer.appendChild(successMessage);
-
-        var successButton = document.querySelector('.success__button');
-
-        var hideMessage = function () {
-          successMessage.classList.add('visually-hidden');
-        };
-        var onMessageButtonClick = function () {
-          hideMessage();
-        };
-        var onEscCloseMessage = function (evt) {
-          if (evt.keyCode === window.utils.ESC_KEYCODE) {
-            hideMessage();
-            document.removeEventListener('keydown', onEscCloseMessage);
-          }
-        };
-
-        successButton.addEventListener('click', onMessageButtonClick);
-        document.addEventListener('click', onMessageButtonClick);
-        document.addEventListener('keydown', onEscCloseMessage);
-      } else {
-        onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
-      }
-    });
-    xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
-    });
-    xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-    });
-
-    xhr.timeout = 10000;
-
-    xhr.open('POST', URL);
-    xhr.send(data);
   };
 })();
