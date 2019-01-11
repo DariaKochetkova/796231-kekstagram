@@ -148,11 +148,12 @@
       changeActiveButton(newPicturesButton);
       picturePreviews = document.querySelectorAll('.picture');
       removePictures(picturePreviews);
-      var newPicturesArray = pictures.slice(15);
-      var newPictures = newPicturesArray.sort();
+      var newPictures = pictures.slice().sort(function () {
+        return 0.5 - Math.random();
+      }).slice(0, 10);
       var newPicsFragment = document.createDocumentFragment();
-      for (var l = 0; l < newPictures.length; l++) {
-        newPicsFragment.appendChild(renderPicture(newPictures[l]));
+      for (var i = 0; i < newPictures.length; i++) {
+        newPicsFragment.appendChild(renderPicture(newPictures[i]));
       }
       window.debounce(function () {
         addPictures(newPicsFragment);
@@ -163,17 +164,12 @@
       changeActiveButton(discussedPicturesButton);
       picturePreviews = document.querySelectorAll('.picture');
       removePictures(picturePreviews);
-      var commentsArray = [];
-      for (var k = 0; k < pictures.length; k++) {
-        var commentsQuantity = pictures[k].comments.length;
-        commentsArray[k] = commentsQuantity;
-      }
-      var commentsArrayCopy = pictures.slice().sort(function (left, right) {
+      var discussedPictures = pictures.slice().sort(function (left, right) {
         return right.comments.length - left.comments.length;
       });
       var discussedPicsFragment = document.createDocumentFragment();
-      for (var l = 0; l < commentsArrayCopy.length; l++) {
-        discussedPicsFragment.appendChild(renderPicture(commentsArrayCopy[l]));
+      for (var i = 0; i < discussedPictures.length; i++) {
+        discussedPicsFragment.appendChild(renderPicture(discussedPictures[i]));
       }
       window.debounce(function () {
         addPictures(discussedPicsFragment);
