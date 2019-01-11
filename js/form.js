@@ -122,7 +122,7 @@
       var successMessage = successMessageTemplate.cloneNode(true);
       messageContainer.appendChild(successMessage);
       var successButton = document.querySelector('.success__button');
-      window.getMessage(successMessage, successButton);
+      window.setMessageListeners(successMessage, successButton);
     }, function (message) {
       var messageContainer = document.querySelector('main');
       var errorMessageTemplate = document.querySelector('#error')
@@ -134,7 +134,7 @@
 
       var errorButton = document.querySelector('.error__button');
 
-      window.getMessage(errorMessage, errorButton);
+      window.setMessageListeners(errorMessage, errorButton);
     });
     evt.preventDefault();
   });

@@ -190,7 +190,7 @@
 
     var errorButton = document.querySelector('.error__button');
 
-    window.getMessage(errorMessage, errorButton);
+    window.setMessageListeners(errorMessage, errorButton);
   };
   window.backend.getPictures(onLoad, onError);
 })();
