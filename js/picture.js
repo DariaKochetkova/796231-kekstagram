@@ -14,7 +14,7 @@
   var bigPicture = document.querySelector('.big-picture');
   var image = document.querySelector('.big-picture__img > img');
   var likes = document.querySelector('.likes-count');
-  var commentsCount = document.querySelector('.comments-count');
+  var commentsCount = document.querySelector('.social__comment-count');
   var commentsList = document.querySelector('.social__comments');
   var caption = document.querySelector('.social__caption');
   var pictureCancelButton = document.querySelector('#picture-cancel');
@@ -22,6 +22,7 @@
   var popularPicturesButton = document.querySelector('#filter-popular');
   var newPicturesButton = document.querySelector('#filter-new');
   var discussedPicturesButton = document.querySelector('#filter-discussed');
+  var commentsLoader = document.querySelector('.social__comments-loader');
 
   var renderPicture = function (picture) {
     var pictureElement = similarPictureTemplate.cloneNode(true);
@@ -50,54 +51,50 @@
     });
   };
   var renderBigPicture = function (picture) {
+
     image.src = picture.url;
     likes.textContent = picture.likes;
-    commentsCount.textContent = picture.comments.length;
 
     var commentsFragment = document.createDocumentFragment();
-    var COMMENTS_MAX = 5;
-    for (var k = 0; k < COMMENTS_MAX; k++) {
-      var commentElement = document.createElement('li');
-      commentElement.className = 'social__comment';
-      var commentAvatar = document.createElement('img');
-      commentAvatar.className = 'social__picture';
-      commentAvatar.src = picture.comments[k].avatar;
-      commentAvatar.alt = 'Аватар комментатора фотографии';
-      commentAvatar.width = '35';
-      commentAvatar.height = '35';
-      var commentElementText = document.createElement('p');
-      commentElementText.className = 'social__text';
-      commentElementText.textContent = picture.comments[k].message;
-      commentElement.appendChild(commentAvatar);
-      commentElement.appendChild(commentElementText);
-      commentsFragment.appendChild(commentElement);
-    }
-
-    commentsList.appendChild(commentsFragment);
-
-    var commentsLoader = document.querySelector('.social__comments-loader');
-    var onCommentsLoaderClick = function () {
-      commentsList.innerHTML = '';
-      var currentComments = k;
-      COMMENTS_MAX += k;
-      for (k = currentComments; k < COMMENTS_MAX; k++) {
-        commentElement = document.createElement('li');
+    var loadedComments = 0;
+    var loadComments = function (comments) {
+      var commentsMax = 5;
+      if (comments.length <= commentsMax) {
+        commentsMax = comments.length;
+        commentsLoader.classList.add('hidden');
+        commentsLoader.removeEventListener('click', onCommentsLoaderClick);
+      }
+      loadedComments += commentsMax;
+      commentsCount.innerHTML = loadedComments + ' из <span class="comments-count">' + picture.comments.length + '</span> комментариев';
+      for (var k = 0; k < commentsMax; k++) {
+        var commentElement = document.createElement('li');
         commentElement.className = 'social__comment';
-        commentAvatar = document.createElement('img');
+        var commentAvatar = document.createElement('img');
         commentAvatar.className = 'social__picture';
-        commentAvatar.src = picture.comments[k].avatar;
+        commentAvatar.src = comments[k].avatar;
         commentAvatar.alt = 'Аватар комментатора фотографии';
         commentAvatar.width = '35';
         commentAvatar.height = '35';
-        commentElementText = document.createElement('p');
+        var commentElementText = document.createElement('p');
         commentElementText.className = 'social__text';
-        commentElementText.textContent = picture.comments[k].message;
+        commentElementText.textContent = comments[k].message;
         commentElement.appendChild(commentAvatar);
         commentElement.appendChild(commentElementText);
         commentsFragment.appendChild(commentElement);
       }
       commentsList.appendChild(commentsFragment);
     };
+
+    loadComments(picture.comments);
+
+    var pictureComments = picture.comments.slice(5);
+
+    var onCommentsLoaderClick = function () {
+      loadComments(pictureComments);
+      pictureComments = pictureComments.slice(5);
+
+    };
+
     commentsLoader.addEventListener('click', onCommentsLoaderClick);
 
     caption.textContent = picture.description;
@@ -108,6 +105,7 @@
     bigPicture.classList.add('hidden');
     pictureCancelButton.removeEventListener('click', onCloseButtonClick);
     document.removeEventListener('keydown', onPictureEscPress);
+    commentsLoader.classList.remove('hidden');
   };
   var changeActiveButton = function (button) {
     var currentActiveButton = document.querySelector('.img-filters__button--active');
