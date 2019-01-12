@@ -2,6 +2,7 @@
 
 (function () {
   var MAX_NEW_PICTURES = 10;
+  var MAX_COMMENTS = 5;
   var picturesContainer = document.querySelector('.pictures');
   var similarPictureTemplate = document.querySelector('#picture')
     .content
@@ -50,63 +51,69 @@
       picture.remove();
     });
   };
+
+  var createComment = function (comment) {
+    var commentElement = document.createElement('li');
+    commentElement.className = 'social__comment';
+    var commentAvatar = document.createElement('img');
+    commentAvatar.className = 'social__picture';
+    commentAvatar.src = comment.avatar;
+    commentAvatar.alt = 'Аватар комментатора фотографии';
+    commentAvatar.width = '35';
+    commentAvatar.height = '35';
+    var commentElementText = document.createElement('p');
+    commentElementText.className = 'social__text';
+    commentElementText.textContent = comment.message;
+    commentElement.appendChild(commentAvatar);
+    commentElement.appendChild(commentElementText);
+    return commentElement;
+  };
+
   var renderBigPicture = function (picture) {
 
     image.src = picture.url;
     likes.textContent = picture.likes;
+    caption.textContent = picture.description;
 
     var commentsFragment = document.createDocumentFragment();
     var loadedComments = 0;
+
     var loadComments = function (comments) {
-      var commentsMax = 5;
-      if (comments.length <= commentsMax) {
-        commentsMax = comments.length;
-        commentsLoader.classList.add('hidden');
-        commentsLoader.removeEventListener('click', onCommentsLoaderClick);
-      }
-      loadedComments += commentsMax;
+      commentsLoader.classList.toggle('hidden', comments.length <= MAX_COMMENTS);
+      loadedComments += Math.min(comments.length, MAX_COMMENTS);
       commentsCount.innerHTML = loadedComments + ' из <span class="comments-count">' + picture.comments.length + '</span> комментариев';
-      for (var k = 0; k < commentsMax; k++) {
-        var commentElement = document.createElement('li');
-        commentElement.className = 'social__comment';
-        var commentAvatar = document.createElement('img');
-        commentAvatar.className = 'social__picture';
-        commentAvatar.src = comments[k].avatar;
-        commentAvatar.alt = 'Аватар комментатора фотографии';
-        commentAvatar.width = '35';
-        commentAvatar.height = '35';
-        var commentElementText = document.createElement('p');
-        commentElementText.className = 'social__text';
-        commentElementText.textContent = comments[k].message;
-        commentElement.appendChild(commentAvatar);
-        commentElement.appendChild(commentElementText);
-        commentsFragment.appendChild(commentElement);
-      }
+      comments.slice(0, MAX_COMMENTS).forEach(function (comment) {
+        commentsFragment.appendChild(createComment(comment));
+      });
       commentsList.appendChild(commentsFragment);
     };
 
     loadComments(picture.comments);
 
-    var pictureComments = picture.comments.slice(5);
-
     var onCommentsLoaderClick = function () {
-      loadComments(pictureComments);
-      pictureComments = pictureComments.slice(5);
+      loadComments(picture.comments.slice(loadedComments));
+    };
 
+    var onCloseButtonClick = function () {
+      closeBigPicture();
+    };
+    var onPictureEscPress = function (evt) {
+      if (evt.keyCode === window.utils.ESC_KEYCODE) {
+        closeBigPicture();
+      }
+    };
+    var closeBigPicture = function () {
+      bigPicture.classList.add('hidden');
+      pictureCancelButton.removeEventListener('click', onCloseButtonClick);
+      document.removeEventListener('keydown', onPictureEscPress);
+      commentsLoader.removeEventListener('click', onCommentsLoaderClick);
     };
 
     commentsLoader.addEventListener('click', onCommentsLoaderClick);
-
-    caption.textContent = picture.description;
     pictureCancelButton.addEventListener('click', onCloseButtonClick);
     document.addEventListener('keydown', onPictureEscPress);
   };
-  var closeBigPicture = function () {
-    bigPicture.classList.add('hidden');
-    pictureCancelButton.removeEventListener('click', onCloseButtonClick);
-    document.removeEventListener('keydown', onPictureEscPress);
-    commentsLoader.classList.remove('hidden');
-  };
+
   var changeActiveButton = function (button) {
     var currentActiveButton = document.querySelector('.img-filters__button--active');
     currentActiveButton.classList.remove('img-filters__button--active');
@@ -117,15 +124,6 @@
     window.debounce(function () {
       renderPictures(pictures);
     });
-  };
-
-  var onCloseButtonClick = function () {
-    closeBigPicture();
-  };
-  var onPictureEscPress = function (evt) {
-    if (evt.keyCode === window.utils.ESC_KEYCODE) {
-      closeBigPicture();
-    }
   };
 
   var picturePreviews;
