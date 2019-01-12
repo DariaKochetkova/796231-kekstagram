@@ -38,7 +38,7 @@
     picturePreviews = pictures.map(function (picture) {
       var element = renderPicture(picture);
       element.addEventListener('click', function () {
-        bigPicture.classList.remove('hidden');
+        bigPicture.classList.remove('hidden'); // TODO Злементу body задаётся класс modal-open.
         commentsList.innerHTML = '';
         renderBigPicture(picture);
       });

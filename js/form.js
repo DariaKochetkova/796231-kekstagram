@@ -64,9 +64,13 @@
   var getPinPosition = function () {
     return Math.round(pin.offsetLeft / scale.offsetWidth * 100);
   };
-  var pinPosition = getPinPosition();
+  var pinPosition = getPinPosition(); // TODO pinPosition определяется до отображения элементов
   var setInputValue = function () {
     effectLevelValue.value = pinPosition;
+  };
+  var getValue = function (effect) {
+    var interval = (window.utils.EFFECT_DEPTH_MAX[effect] - window.utils.EFFECT_DEPTH_MIN[effect]) / 100;
+    return getPinPosition() * interval + window.utils.EFFECT_DEPTH_MIN[effect];
   };
 
   var onPinMouseDown = function (evt) {
@@ -86,11 +90,8 @@
         pinCoord = scale.offsetWidth;
       }
       setDepthStyle(pinCoord);
-      setInputValue();
-      var getValue = function (max, min) {
-        return getPinPosition() * (max - min) / 100 + min;
-      };
-      setEffectDepth(currentEffect, getValue(window.utils.EFFECT_DEPTH_MAX[currentEffect], window.utils.EFFECT_DEPTH_MIN[currentEffect]));
+      setInputValue(); // TODO нужно обновлять значение pinPosition
+      setEffectDepth(currentEffect, getValue(currentEffect));
     };
     var onPinMouseUp = function (upEvt) {
       upEvt.preventDefault();
@@ -103,11 +104,8 @@
     document.addEventListener('mouseup', onPinMouseUp);
   };
 
-  var closeEditPhotoForm = function () {
-    editPhotoForm.classList.add('hidden');
-  };
   var cleanForm = function () {
-    closeEditPhotoForm();
+    editPhotoForm.classList.add('hidden');
     for (var i = 0; i < effectButtons.length; i++) {
       effectButtons[i].removeEventListener('change', setEffect);
     }
@@ -120,14 +118,14 @@
     window.previewSize.sizeValue = window.utils.PIC_SIZE_DEFAULT;
     window.imagePreview.style.filter = DEFAULT_EFFECT;
     window.imagePreview.classList.remove(currentFilter);
-    window.hashtags.field.style = 'border: none;';
+    window.hashtags.field.style.border = 'none';
   };
 
-  var escCloseForm = function (evt) {
+  var onFormEsc = function (evt) {
     if (evt.keyCode === window.utils.ESC_KEYCODE) {
       cleanForm();
       form.reset();
-      document.removeEventListener('keydown', escCloseForm);
+      document.removeEventListener('keydown', onFormEsc);
     }
   };
 
@@ -140,7 +138,7 @@
     effectDecrease.addEventListener('click', window.previewSize.onDecreasePictureClick);
     effectIncrease.addEventListener('click', window.previewSize.onIncreasePictureClick);
     window.hashtags.field.addEventListener('change', window.hashtags.onFieldChange);
-    document.addEventListener('keydown', escCloseForm);
+    document.addEventListener('keydown', onFormEsc);
   });
 
   cancelButton.addEventListener('click', cleanForm);
@@ -153,7 +151,7 @@
       var successButton = successMessage.querySelector('.success__button');
       messageContainer.appendChild(successMessage);
       window.setMessageListeners(successMessage, successButton);
-    }, function (message) {
+    }, function (message) { // TODO модалка ошибки висит под формой
       var errorMessage = errorMessageTemplate.cloneNode(true);
       var errorButton = errorMessage.querySelector('.error__button');
       errorMessage.querySelector('.error__title').textContent = message;
