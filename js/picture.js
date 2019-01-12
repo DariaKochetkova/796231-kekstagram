@@ -24,6 +24,7 @@
   var newPicturesButton = document.querySelector('#filter-new');
   var discussedPicturesButton = document.querySelector('#filter-discussed');
   var commentsLoader = document.querySelector('.social__comments-loader');
+  var modalOpen = document.querySelector('body');
 
   var renderPicture = function (picture) {
     var pictureElement = similarPictureTemplate.cloneNode(true);
@@ -39,7 +40,7 @@
       var element = renderPicture(picture);
       element.addEventListener('click', function () {
         bigPicture.classList.remove('hidden');
-        bigPicture.classList.add('modal-open');
+        modalOpen.classList.add('modal-open');
         commentsList.innerHTML = '';
         renderBigPicture(picture);
       });
@@ -105,6 +106,7 @@
     };
     var closeBigPicture = function () {
       bigPicture.classList.add('hidden');
+      modalOpen.classList.remove('modal-open');
       pictureCancelButton.removeEventListener('click', onCloseButtonClick);
       document.removeEventListener('keydown', onPictureEscPress);
       commentsLoader.removeEventListener('click', onCommentsLoaderClick);
