@@ -64,8 +64,8 @@
   var getPinPosition = function () {
     return Math.round(pin.offsetLeft / scale.offsetWidth * 100);
   };
-  var pinPosition = getPinPosition(); // TODO pinPosition определяется до отображения элементов
   var setInputValue = function () {
+    var pinPosition = getPinPosition();
     effectLevelValue.value = pinPosition;
   };
   var getValue = function (effect) {
@@ -90,7 +90,7 @@
         pinCoord = scale.offsetWidth;
       }
       setDepthStyle(pinCoord);
-      setInputValue(); // TODO нужно обновлять значение pinPosition
+      setInputValue();
       setEffectDepth(currentEffect, getValue(currentEffect));
     };
     var onPinMouseUp = function (upEvt) {
@@ -151,11 +151,12 @@
       var successButton = successMessage.querySelector('.success__button');
       messageContainer.appendChild(successMessage);
       window.setMessageListeners(successMessage, successButton);
-    }, function (message) { // TODO модалка ошибки висит под формой
+    }, function (message) {
       var errorMessage = errorMessageTemplate.cloneNode(true);
       var errorButton = errorMessage.querySelector('.error__button');
       errorMessage.querySelector('.error__title').textContent = message;
       messageContainer.appendChild(errorMessage);
+      errorMessage.style.zIndex = '2';
       window.setMessageListeners(errorMessage, errorButton);
     });
     evt.preventDefault();
