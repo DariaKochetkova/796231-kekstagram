@@ -108,8 +108,8 @@
   };
   var cleanForm = function () {
     closeEditPhotoForm();
-    for (var o = 0; o < effectButtons.length; o++) {
-      effectButtons[o].removeEventListener('change', setEffect);
+    for (var i = 0; i < effectButtons.length; i++) {
+      effectButtons[i].removeEventListener('change', setEffect);
     }
     pin.removeEventListener('mousedown', onPinMouseDown);
     effectDecrease.removeEventListener('click', window.previewSize.onDecreasePictureClick);
@@ -133,8 +133,8 @@
 
   uploadFile.addEventListener('change', function () {
     editPhotoForm.classList.remove('hidden');
-    for (var l = 0; l < effectButtons.length; l++) {
-      effectButtons[l].addEventListener('change', setEffect);
+    for (var i = 0; i < effectButtons.length; i++) {
+      effectButtons[i].addEventListener('change', setEffect);
     }
     pin.addEventListener('mousedown', onPinMouseDown);
     effectDecrease.addEventListener('click', window.previewSize.onDecreasePictureClick);

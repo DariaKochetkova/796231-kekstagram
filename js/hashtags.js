@@ -54,8 +54,8 @@
       if (tagsQuantityError) {
         setErrorMessage(tagsQuantityError);
       } else {
-        for (var n = 0; n < hashtags.length; n++) {
-          var hashtagKey = hashtags[n];
+        for (var i = 0; i < hashtags.length; i++) {
+          var hashtagKey = hashtags[i];
           if (hashtagKey === '') {
             break;
           }
