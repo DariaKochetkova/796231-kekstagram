@@ -5,19 +5,21 @@
   var CLASS_NAME = 'effects__preview--';
 
   var cancelButton = document.querySelector('#upload-cancel');
-  var uploadFile = document.querySelector('#upload-file');
   var editPhotoForm = document.querySelector('.img-upload__overlay');
-  var effectIncrease = document.querySelector('.scale__control--bigger');
-  var effectDecrease = document.querySelector('.scale__control--smaller');
+  var effectIncrease = editPhotoForm.querySelector('.scale__control--bigger');
+  var effectDecrease = editPhotoForm.querySelector('.scale__control--smaller');
 
   var form = document.querySelector('.img-upload__form');
-  var pin = document.querySelector('.effect-level__pin');
-  var scale = document.querySelector('.effect-level__line');
-  var depthScale = document.querySelector('.effect-level__depth');
-  var rangeScale = document.querySelector('.img-upload__effect-level');
-  window.imagePreview = document.querySelector('.img-upload__preview');
-  var effectButtons = document.querySelectorAll('.effects__radio');
-  var effectLevelValue = document.querySelector('.effect-level__value');
+  var pin = form.querySelector('.effect-level__pin');
+  var scale = form.querySelector('.effect-level__line');
+  var depthScale = form.querySelector('.effect-level__depth');
+  var rangeScale = form.querySelector('.img-upload__effect-level');
+  var effectButtons = form.querySelectorAll('.effects__radio');
+  var effectLevelValue = form.querySelector('.effect-level__value');
+  var commentField = form.querySelector('.text__description');
+  var imagePreview = form.querySelector('.img-upload__preview');
+  var uploadFile = document.querySelector('#upload-file');
+  var uploadImage = imagePreview.querySelector('img');
 
   var messageContainer = document.querySelector('main');
   var successMessageTemplate = document.querySelector('#success')
@@ -30,17 +32,17 @@
   var currentEffect = DEFAULT_EFFECT;
   var currentFilter = CLASS_NAME + currentEffect;
   var setEffectDepth = function (effectName, value) {
-    window.imagePreview.style.filter = window.utils.EFFECT[effectName] + '(' + value + window.utils.EFFECT_STRING[effectName] + ')';
+    imagePreview.style.filter = window.utils.Effect[effectName] + '(' + value + window.utils.EffectString[effectName] + ')';
     if (effectName === DEFAULT_EFFECT) {
-      window.imagePreview.style.filter = DEFAULT_EFFECT;
+      imagePreview.style.filter = DEFAULT_EFFECT;
     }
   };
 
   var changeFilter = function (filterName) {
     if (currentFilter) {
-      window.imagePreview.classList.remove(currentFilter);
+      imagePreview.classList.remove(currentFilter);
     }
-    window.imagePreview.classList.add(CLASS_NAME + filterName);
+    imagePreview.classList.add(CLASS_NAME + filterName);
     currentFilter = CLASS_NAME + filterName;
   };
   var setDepthStyle = function (value) {
@@ -58,7 +60,7 @@
       setInputValue();
     }
     changeFilter(effectName);
-    setEffectDepth(effectName, window.utils.EFFECT_DEPTH_MAX[effectName]);
+    setEffectDepth(effectName, window.utils.EffectDepthMax[effectName]);
   };
 
   var getPinPosition = function () {
@@ -69,8 +71,8 @@
     effectLevelValue.value = pinPosition;
   };
   var getValue = function (effect) {
-    var interval = (window.utils.EFFECT_DEPTH_MAX[effect] - window.utils.EFFECT_DEPTH_MIN[effect]) / 100;
-    return getPinPosition() * interval + window.utils.EFFECT_DEPTH_MIN[effect];
+    var interval = (window.utils.EffectDepthMax[effect] - window.utils.EffectDepthMin[effect]) / 100;
+    return getPinPosition() * interval + window.utils.EffectDepthMin[effect];
   };
 
   var onPinMouseDown = function (evt) {
@@ -116,13 +118,13 @@
     rangeScale.classList.add('hidden');
     window.previewSize.changePicSize(window.utils.PIC_SIZE_DEFAULT);
     window.previewSize.sizeValue = window.utils.PIC_SIZE_DEFAULT;
-    window.imagePreview.style.filter = DEFAULT_EFFECT;
-    window.imagePreview.classList.remove(currentFilter);
+    imagePreview.style.filter = DEFAULT_EFFECT;
+    imagePreview.classList.remove(currentFilter);
     window.hashtags.field.style.border = 'none';
   };
 
   var onFormEsc = function (evt) {
-    if (evt.keyCode === window.utils.ESC_KEYCODE) {
+    if (evt.keyCode === window.utils.ESC_KEYCODE && document.activeElement !== window.hashtags.field && document.activeElement !== commentField) {
       cleanForm();
       form.reset();
       document.removeEventListener('keydown', onFormEsc);
@@ -161,4 +163,9 @@
     });
     evt.preventDefault();
   });
+  window.form = {
+    imagePreview: imagePreview,
+    uploadFile: uploadFile,
+    uploadImage: uploadImage
+  };
 })();

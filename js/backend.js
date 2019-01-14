@@ -5,7 +5,7 @@
   var REQUEST_TIMEOUT = 10000;
   var URL = 'https://js.dump.academy/kekstagram';
   var DATA_URL = 'https://js.dump.academy/kekstagram/data';
-  var codeErrorToText = {
+  var TextError = {
     '400': 'Неверный запрос',
     '401': 'Пользователь не авторизован',
     '404': 'По данному запросу ничего не найдено',
@@ -23,7 +23,7 @@
         onLoad(xhr.response);
       } else {
         var error =
-          codeErrorToText[xhr.status] ||
+          TextError[xhr.status] ||
           'Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText;
         onError(error);
       }

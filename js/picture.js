@@ -13,18 +13,17 @@
     .querySelector('.error');
 
   var bigPicture = document.querySelector('.big-picture');
-  var image = document.querySelector('.big-picture__img > img');
-  var likes = document.querySelector('.likes-count');
-  var commentsCount = document.querySelector('.social__comment-count');
-  var commentsList = document.querySelector('.social__comments');
-  var caption = document.querySelector('.social__caption');
+  var image = bigPicture.querySelector('.big-picture__img > img');
+  var likes = bigPicture.querySelector('.likes-count');
+  var commentsCount = bigPicture.querySelector('.social__comment-count');
+  var commentsList = bigPicture.querySelector('.social__comments');
+  var commentsLoader = bigPicture.querySelector('.social__comments-loader');
+  var caption = bigPicture.querySelector('.social__caption');
   var pictureCancelButton = document.querySelector('#picture-cancel');
   var imagesFilters = document.querySelector('.img-filters');
-  var popularPicturesButton = document.querySelector('#filter-popular');
-  var newPicturesButton = document.querySelector('#filter-new');
-  var discussedPicturesButton = document.querySelector('#filter-discussed');
-  var commentsLoader = document.querySelector('.social__comments-loader');
-  var modalOpen = document.querySelector('body');
+  var popularPicturesButton = imagesFilters.querySelector('#filter-popular');
+  var newPicturesButton = imagesFilters.querySelector('#filter-new');
+  var discussedPicturesButton = imagesFilters.querySelector('#filter-discussed');
 
   var renderPicture = function (picture) {
     var pictureElement = similarPictureTemplate.cloneNode(true);
@@ -40,7 +39,7 @@
       var element = renderPicture(picture);
       element.addEventListener('click', function () {
         bigPicture.classList.remove('hidden');
-        modalOpen.classList.add('modal-open');
+        document.body.classList.add('modal-open');
         commentsList.innerHTML = '';
         renderBigPicture(picture);
       });
@@ -106,7 +105,7 @@
     };
     var closeBigPicture = function () {
       bigPicture.classList.add('hidden');
-      modalOpen.classList.remove('modal-open');
+      document.body.classList.remove('modal-open');
       pictureCancelButton.removeEventListener('click', onCloseButtonClick);
       document.removeEventListener('keydown', onPictureEscPress);
       commentsLoader.removeEventListener('click', onCommentsLoaderClick);

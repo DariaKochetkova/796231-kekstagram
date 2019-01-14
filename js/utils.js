@@ -2,14 +2,14 @@
 
 (function () {
   window.utils = {
-    EFFECT: {
+    Effect: {
       chrome: 'grayscale',
       sepia: 'sepia',
       marvin: 'invert',
       phobos: 'blur',
       heat: 'brightness'
     },
-    EFFECT_DEPTH_MAX: {
+    EffectDepthMax: {
       chrome: 1,
       sepia: 1,
       marvin: 100,
@@ -17,14 +17,14 @@
       heat: 3
     },
 
-    EFFECT_DEPTH_MIN: {
+    EffectDepthMin: {
       chrome: 0,
       sepia: 0,
       marvin: 0,
       phobos: 0,
       heat: 1
     },
-    EFFECT_STRING: {
+    EffectString: {
       chrome: '',
       sepia: '',
       marvin: '%',

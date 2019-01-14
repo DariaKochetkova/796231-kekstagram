@@ -24,7 +24,7 @@
     sizeValue: window.utils.PIC_SIZE_DEFAULT,
     changePicSize: function (value) {
       inputValue.value = value + '%';
-      window.imagePreview.style.transform = 'scale(' + value / 100 + ')';
+      window.form.imagePreview.style.transform = 'scale(' + value / 100 + ')';
     }
   };
 })();
