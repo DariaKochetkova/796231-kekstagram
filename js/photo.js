@@ -3,7 +3,7 @@
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-  window.form.uploadFile.addEventListener('change', function (onError) {
+  var getPic = function (onSuccess, onError) {
     var file = window.form.uploadFile.files[0];
     var fileName = file.name.toLowerCase();
 
@@ -16,10 +16,8 @@
       var reader = new FileReader();
 
       reader.addEventListener('load', function () {
-        window.form.uploadImage.src = reader.result;
+        onSuccess(reader.result);
       });
-
-      reader.readAsDataURL(file);
 
       reader.onerror = function () {
         reader.abort();
@@ -29,5 +27,12 @@
     } else {
       onError('Неверный формат файла!');
     }
-  });
+
+    reader.readAsDataURL(file);
+  };
+  window.photo = {
+    uploadPic: function (onSuccess, onError) {
+      getPic(onSuccess, onError);
+    }
+  };
 })();

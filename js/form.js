@@ -32,7 +32,7 @@
   var currentEffect = DEFAULT_EFFECT;
   var currentFilter = CLASS_NAME + currentEffect;
   var setEffectDepth = function (effectName, value) {
-    imagePreview.style.filter = window.utils.Effect[effectName] + '(' + value + window.utils.EffectString[effectName] + ')';
+    imagePreview.style.filter = window.utils.Effect[effectName.toUpperCase()] + '(' + value + window.utils.EffectString[effectName.toUpperCase()] + ')';
     if (effectName === DEFAULT_EFFECT) {
       imagePreview.style.filter = DEFAULT_EFFECT;
     }
@@ -60,7 +60,7 @@
       setInputValue();
     }
     changeFilter(effectName);
-    setEffectDepth(effectName, window.utils.EffectDepthMax[effectName]);
+    setEffectDepth(effectName, window.utils.EffectDepthMax[effectName.toUpperCase()]);
   };
 
   var getPinPosition = function () {
@@ -71,8 +71,8 @@
     effectLevelValue.value = pinPosition;
   };
   var getValue = function (effect) {
-    var interval = (window.utils.EffectDepthMax[effect] - window.utils.EffectDepthMin[effect]) / 100;
-    return getPinPosition() * interval + window.utils.EffectDepthMin[effect];
+    var interval = (window.utils.EffectDepthMax[effect.toUpperCase()] - window.utils.EffectDepthMin[effect.toUpperCase()]) / 100;
+    return getPinPosition() * interval + window.utils.EffectDepthMin[effect.toUpperCase()];
   };
 
   var onPinMouseDown = function (evt) {
@@ -131,8 +131,13 @@
     }
   };
 
+  var onSuccess = function (reader) {
+    window.form.uploadImage.src = reader;
+  };
+
   uploadFile.addEventListener('change', function () {
     editPhotoForm.classList.remove('hidden');
+    window.photo.uploadPic(onSuccess, window.erroronError);
     for (var i = 0; i < effectButtons.length; i++) {
       effectButtons[i].addEventListener('change', setEffect);
     }

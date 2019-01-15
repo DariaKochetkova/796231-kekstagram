@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var SUCCESS_CODE = 200;
   var REQUEST_TIMEOUT = 10000;
   var URL = 'https://js.dump.academy/kekstagram';
   var DATA_URL = 'https://js.dump.academy/kekstagram/data';
@@ -19,7 +18,7 @@
 
     xhr.addEventListener('load', function () {
 
-      if (xhr.status === SUCCESS_CODE) {
+      if (xhr.status === window.utils.SUCCESS_CODE) {
         onLoad(xhr.response);
       } else {
         var error =

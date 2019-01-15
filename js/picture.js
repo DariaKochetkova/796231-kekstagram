@@ -7,10 +7,6 @@
   var similarPictureTemplate = document.querySelector('#picture')
     .content
     .querySelector('.picture');
-  var messageContainer = document.querySelector('main');
-  var errorMessageTemplate = document.querySelector('#error')
-    .content
-    .querySelector('.error');
 
   var bigPicture = document.querySelector('.big-picture');
   var image = bigPicture.querySelector('.big-picture__img > img');
@@ -161,13 +157,5 @@
     discussedPicturesButton.addEventListener('click', onDiscussedPicsButtonClick);
   };
 
-  var onError = function (message) {
-    var errorMessage = errorMessageTemplate.cloneNode(true);
-    var errorButton = errorMessage.querySelector('.error__button');
-    errorMessage.querySelector('.error__title').textContent = message;
-    messageContainer.appendChild(errorMessage);
-
-    window.setMessageListeners(errorMessage, errorButton);
-  };
-  window.backend.getPictures(onLoad, onError);
+  window.backend.getPictures(onLoad, window.erroronError);
 })();

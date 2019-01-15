@@ -3,35 +3,36 @@
 (function () {
   window.utils = {
     Effect: {
-      chrome: 'grayscale',
-      sepia: 'sepia',
-      marvin: 'invert',
-      phobos: 'blur',
-      heat: 'brightness'
+      CHROME: 'grayscale',
+      SEPIA: 'sepia',
+      MARVIN: 'invert',
+      PHOBOS: 'blur',
+      HEAT: 'brightness'
     },
     EffectDepthMax: {
-      chrome: 1,
-      sepia: 1,
-      marvin: 100,
-      phobos: 3,
-      heat: 3
+      CHROME: 1,
+      SEPIA: 1,
+      MARVIN: 100,
+      PHOBOS: 3,
+      HEAT: 3
     },
 
     EffectDepthMin: {
-      chrome: 0,
-      sepia: 0,
-      marvin: 0,
-      phobos: 0,
-      heat: 1
+      CHROME: 0,
+      SEPIA: 0,
+      MARVIN: 0,
+      PHOBOS: 0,
+      HEAT: 1
     },
     EffectString: {
-      chrome: '',
-      sepia: '',
-      marvin: '%',
-      phobos: 'px',
-      heat: ''
+      CHROME: '',
+      SEPIA: '',
+      MARVIN: '%',
+      PHOBOS: 'px',
+      HEAT: ''
     },
     PIC_SIZE_DEFAULT: 100,
-    ESC_KEYCODE: 27
+    ESC_KEYCODE: 27,
+    SUCCESS_CODE: 200
   };
 })();
