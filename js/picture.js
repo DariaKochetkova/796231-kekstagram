@@ -157,5 +157,5 @@
     discussedPicturesButton.addEventListener('click', onDiscussedPicsButtonClick);
   };
 
-  window.backend.getPictures(onLoad, window.erroronError);
+  window.backend.getPictures(onLoad, window.error.onError);
 })();

@@ -24,11 +24,11 @@
         onError('Ошибка чтения файла!');
       };
 
+      reader.readAsDataURL(file);
     } else {
       onError('Неверный формат файла!');
     }
 
-    reader.readAsDataURL(file);
   };
   window.photo = {
     uploadPic: function (onSuccess, onError) {

@@ -137,7 +137,7 @@
 
   uploadFile.addEventListener('change', function () {
     editPhotoForm.classList.remove('hidden');
-    window.photo.uploadPic(onSuccess, window.erroronError);
+    window.photo.uploadPic(onSuccess, window.error.onError);
     for (var i = 0; i < effectButtons.length; i++) {
       effectButtons[i].addEventListener('change', setEffect);
     }
